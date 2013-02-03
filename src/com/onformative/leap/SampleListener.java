@@ -1,6 +1,5 @@
 package com.onformative.leap;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,7 +18,6 @@ class SampleListener extends Listener {
   private LeapMotionP5 leap;
   
   private int maxFrameCountToCheckForGestures = 250;
-  private int frameCounter = 0;
 
   public SampleListener(PApplet p, LeapMotionP5 leap) {
     this.p = p;

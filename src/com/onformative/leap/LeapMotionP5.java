@@ -1,9 +1,6 @@
 package com.onformative.leap;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import processing.core.PApplet;

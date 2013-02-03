@@ -1,15 +1,6 @@
 package example;
 
-import java.util.ArrayList;
-
-import com.leapmotion.leap.Finger;
-import com.leapmotion.leap.FingerList;
-import com.leapmotion.leap.Frame;
-import com.leapmotion.leap.Hand;
-import com.leapmotion.leap.Tool;
-import com.leapmotion.leap.Vector;
 import com.onformative.leap.LeapMotionP5;
-import com.onformative.leap.gestures.Gesture;
 import com.onformative.leap.gestures.PullGesture;
 import com.onformative.leap.gestures.PushGesture;
 import com.onformative.leap.gestures.SwipeDownGesture;
@@ -20,7 +11,6 @@ import com.onformative.leap.gestures.SwipeUpGesture;
 import controlP5.ControlP5;
 
 import processing.core.PApplet;
-import processing.core.PFont;
 
 public class GestureExample extends PApplet {
 
