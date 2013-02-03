@@ -15,14 +15,16 @@ public class LeapProcessing extends PApplet {
   static float LEAP_HEIGHT = 700.0f; // in mm
 
   public void setup() {
-    size(500, 500);
+    size(500, 500, P3D);
 
     leap = new LeapMotionP5(this);
+    
+    
   }
 
   public void draw() {
     background(0);
-
+    lights();
     for (Map.Entry entry : leap.getFingerPositions().entrySet()) {
       Integer fingerId = (Integer) entry.getKey();
       Vector position = (Vector) entry.getValue();
@@ -38,6 +40,30 @@ public class LeapProcessing extends PApplet {
       noStroke();
       ellipse(leapToScreenX(position.getX()), leapToScreenY(position.getY()), 24.0f, 24.0f);
     }
+    
+    translate(width/2, height/2);
+    for (Map.Entry entry : leap.getHandPitch().entrySet()) {
+      double pitch = (Double) entry.getValue();
+      System.out.println("pitch:"+pitch);
+      rotateX(map((float) pitch, -1, 1, 0, TWO_PI));
+    }
+    
+    for (Map.Entry entry : leap.getHandRoll().entrySet()) {
+      double roll = (Double) entry.getValue();
+      System.out.println("roll:"+roll);
+      rotateY(map((float) roll, -1, 1, 0, TWO_PI));
+    }
+    
+    for (Map.Entry entry : leap.getHandYaw().entrySet()) {
+      double yaw = (Double) entry.getValue();
+      System.out.println("yaw:"+yaw);
+      //rotateY(map((float) yaw, -1, 1, 0, TWO_PI));
+    }
+    
+    
+    stroke(255);
+    fill(190);
+    box(100);
   }
 
   public void stop() {
