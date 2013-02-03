@@ -15,7 +15,7 @@ public class SwipeUpGesture extends Gesture {
     super(parent, leap);
     // TODO Auto-generated constructor stub
   }
-  
+
   /**
    * checks if the gesture has been performed
    * 
@@ -32,7 +32,7 @@ public class SwipeUpGesture extends Gesture {
         Hand hand = frame.hands().get(0);
         FingerList fingers = hand.fingers();
         if (!fingers.empty()) {
-          if (fingers.get(0).tipVelocity().getY() > -velocityThreshold) {
+          if (fingers.get(0).tipVelocity().getY() > velocityThreshold) {
             blockSwipeUp = true;
             millisBlockSwipeUpStarted = parent.millis();
             return true;

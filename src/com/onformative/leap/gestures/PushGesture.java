@@ -32,7 +32,7 @@ public class PushGesture extends Gesture {
         Hand hand = frame.hands().get(0);
         FingerList fingers = hand.fingers();
         if (!fingers.empty()) {
-          if (fingers.get(0).tipVelocity().getZ() < velocityThreshold) {
+          if (fingers.get(0).tipVelocity().getZ() < -velocityThreshold) {
             blockPush = true;
             millisBlockPushStarted = parent.millis();
             return true;

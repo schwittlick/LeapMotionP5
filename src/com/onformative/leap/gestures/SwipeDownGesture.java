@@ -32,7 +32,7 @@ public class SwipeDownGesture extends Gesture {
         Hand hand = frame.hands().get(0);
         FingerList fingers = hand.fingers();
         if (!fingers.empty()) {
-          if (fingers.get(0).tipVelocity().getY() < velocityThreshold) {
+          if (fingers.get(0).tipVelocity().getY() < -velocityThreshold) {
             blockSwipeDown = true;
             millisBlockSwipeDownStarted = parent.millis();
             return true;

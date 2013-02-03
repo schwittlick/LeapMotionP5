@@ -31,7 +31,7 @@ public class SwipeRightGesture extends Gesture {
         Hand hand = frame.hands().get(0);
         FingerList fingers = hand.fingers();
         if (!fingers.empty()) {
-          if (fingers.get(0).tipVelocity().getX() > -velocityThreshold) {
+          if (fingers.get(0).tipVelocity().getX() > velocityThreshold) {
             blockSwipeRight = true;
             millisBlockSwipeRightStarted = parent.millis();
             return true;
