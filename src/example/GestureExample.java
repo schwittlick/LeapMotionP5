@@ -1,5 +1,8 @@
 package example;
 
+import java.util.Map;
+
+import com.leapmotion.leap.Vector;
 import com.onformative.leap.LeapMotionP5;
 import com.onformative.leap.gestures.PullGesture;
 import com.onformative.leap.gestures.PushGesture;
@@ -7,6 +10,7 @@ import com.onformative.leap.gestures.SwipeDownGesture;
 import com.onformative.leap.gestures.SwipeLeftGesture;
 import com.onformative.leap.gestures.SwipeRightGesture;
 import com.onformative.leap.gestures.SwipeUpGesture;
+import com.onformative.leap.gestures.VictoryGesture;
 
 import controlP5.ControlP5;
 
@@ -22,6 +26,8 @@ public class GestureExample extends PApplet {
   PushGesture pg;
   PullGesture pug;
 
+  VictoryGesture vg;
+
   ControlP5 cp5;
   boolean showGui = false;
 
@@ -35,6 +41,7 @@ public class GestureExample extends PApplet {
     sd = new SwipeDownGesture(this, leap);
     pg = new PushGesture(this, leap);
     pug = new PullGesture(this, leap);
+    vg = new VictoryGesture(this, leap);
 
     cp5 = new ControlP5(this);
     cp5.setAutoDraw(false);
@@ -62,11 +69,21 @@ public class GestureExample extends PApplet {
   }
 
   public void draw() {
+    //System.out.println(frameRate);
     fill(0, 40);
     noStroke();
     rect(0, 0, width, height);
+    
+    fill(255);
+    //ellipse(leap.getFingerPositionXYPlane().x, leap.getFingerPositionXYPlane().y, 30, 30);
 
-    if (sl.check()) {
+    for (Map.Entry entry : leap.getFingerPositions().entrySet()) {
+      Integer fingerId = (Integer) entry.getKey();
+      Vector position = (Vector) entry.getValue();
+      noStroke();
+      ellipse(leap.leapToScreenX(position.getX()), leap.leapToScreenY(position.getY()), 24.0f, 24.0f);
+    }
+    /*if (sl.check()) {
       System.out.println("swipe left");
       fill(255, 0, 0);
       rect(0, 0, width, height);
@@ -90,6 +107,12 @@ public class GestureExample extends PApplet {
       System.out.println("pulled");
       fill(0, 255, 255);
       rect(0, 0, width, height);
+    } else*/ if (vg.check()){
+      //System.out.println("victory opened");
+      //fill(255, 255, 255);
+      //rect(0, 0, width, height);
+    }  else if (vg.closed()){
+      System.out.println("victory closed");
     }
 
     if (showGui) {

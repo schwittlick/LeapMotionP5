@@ -34,7 +34,7 @@ import processing.core.PApplet;
 /**
  * TODO: Implement to check for a minimal distance to be performed, when the gesture is triggered
  * 
- * @author marcels
+ * @author Marcel Schwittlick
  * 
  */
 public class SwipeLeftGesture extends Gesture {

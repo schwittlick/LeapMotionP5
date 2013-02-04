@@ -31,6 +31,11 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
 import com.onformative.leap.LeapMotionP5;
 
+/**
+ * 
+ * @author Marcel Schwittlick
+ * 
+ */
 public class SwipeUpGesture extends Gesture {
   private boolean blockSwipeUp = false;
   private int millisBlockSwipeUpStarted;

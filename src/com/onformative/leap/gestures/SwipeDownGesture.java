@@ -31,6 +31,10 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
 import com.onformative.leap.LeapMotionP5;
 
+/**
+ * @author Marcel Schwittlick
+ * 
+ */
 public class SwipeDownGesture extends Gesture {
   private boolean blockSwipeDown = false;
   private int millisBlockSwipeDownStarted;

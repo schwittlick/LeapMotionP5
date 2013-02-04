@@ -28,6 +28,11 @@ import com.onformative.leap.LeapMotionP5;
 
 import processing.core.PApplet;
 
+/**
+ * 
+ * @author Marcel Schwittlick
+ * 
+ */
 public class Gesture {
   protected PApplet parent;
   protected LeapMotionP5 leap;

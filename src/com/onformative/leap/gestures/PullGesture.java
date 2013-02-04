@@ -31,6 +31,11 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
 import com.onformative.leap.LeapMotionP5;
 
+/**
+ * 
+ * @author Marcel Schwittlick
+ * 
+ */
 public class PullGesture extends Gesture {
   private boolean blockPull = false;
   private int millisBlockPullStarted;

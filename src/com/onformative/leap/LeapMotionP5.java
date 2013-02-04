@@ -28,9 +28,12 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentMap;
 
 import processing.core.PApplet;
+import processing.core.PVector;
 
 import com.leapmotion.leap.Controller;
+import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Vector;
 
 /**
@@ -44,6 +47,7 @@ import com.leapmotion.leap.Vector;
  * 
  */
 public class LeapMotionP5 {
+  private PApplet p;
   private LeapMotionListener listener;
   private Controller controller;
 
@@ -57,7 +61,12 @@ public class LeapMotionP5 {
 
   protected Frame currentFrame;
 
+  private float LEAP_WIDTH = 200.0f; // in mm
+  private float LEAP_HEIGHT = 700.0f; // in mm
+
   public LeapMotionP5(PApplet p) {
+    this.p = p;
+
     listener = new LeapMotionListener(p, this);
     controller = new Controller();
 
@@ -102,5 +111,49 @@ public class LeapMotionP5 {
 
   public LinkedList<Frame> getFrames() {
     return lastFrames;
+  }
+
+  public PVector getFingerPositionXYPlane() {
+    PVector fingerPositionXYPlane = new PVector();
+
+    Frame frame = getCurrentFrame();
+    if (frame.hands().empty() == false) {
+      Hand hand = frame.hands().get(0);
+      if (hand.fingers().empty() == false) {
+        Finger finger = hand.fingers().get(0);
+        fingerPositionXYPlane.x = leapToScreenX(finger.tipPosition().getX());
+        fingerPositionXYPlane.y = leapToScreenY(finger.tipPosition().getY());
+      }
+    }
+
+    return fingerPositionXYPlane;
+  }
+
+  public float leapToScreenX(float x) {
+    float c = p.width / 2.0f;
+    if (x > 0.0) {
+      return PApplet.lerp(c, p.width, x / LEAP_WIDTH);
+    } else {
+      return PApplet.lerp(c, 0.0f, -x / LEAP_WIDTH);
+    }
+  }
+
+  public float leapToScreenY(float y) {
+    return PApplet.lerp(p.height, 0.0f, y / LEAP_HEIGHT);
+  }
+
+  public Finger getFinger(int fingerNr) {
+    Finger finger = new Finger();
+
+    Frame frame = getCurrentFrame();
+    if (frame.hands().empty() == false) {
+      Hand hand = frame.hands().get(0);
+      if (hand.fingers().empty() == false) {
+        finger = hand.fingers().get(fingerNr);
+      }
+    }
+
+
+    return finger;
   }
 }
