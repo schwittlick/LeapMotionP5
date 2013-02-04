@@ -1,7 +1,7 @@
-<b>LeapMotionP5</b>
+<b>LeapMotionP5</b> - A Leap Motion Library for Processing
 ======================
 
-A Leap Motion Library for Processing. Working with all Processing versions and all operating systems.
+Working with all Processing versions and all operating systems, with the newest version of the leap motion sdk.
 Just extract the the content of the LeapMotionP5.zip into your library folder and check out the
 examples- they cover everything the library is capable of at the moment.
 
