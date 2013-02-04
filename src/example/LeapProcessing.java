@@ -18,17 +18,17 @@ public class LeapProcessing extends PApplet {
     size(500, 500, P3D);
 
     leap = new LeapMotionP5(this);
-    
-    
+
+
   }
 
   public void draw() {
     background(0);
     lights();
+    fill(255);
     for (Map.Entry entry : leap.getFingerPositions().entrySet()) {
       Integer fingerId = (Integer) entry.getKey();
       Vector position = (Vector) entry.getValue();
-      fill(leap.getFingerColors().get(fingerId));
       noStroke();
       ellipse(leapToScreenX(position.getX()), leapToScreenY(position.getY()), 24.0f, 24.0f);
     }
@@ -36,31 +36,30 @@ public class LeapProcessing extends PApplet {
     for (Map.Entry entry : leap.getToolPositions().entrySet()) {
       Integer toolId = (Integer) entry.getKey();
       Vector position = (Vector) entry.getValue();
-      fill(leap.getToolColors().get(toolId));
       noStroke();
       ellipse(leapToScreenX(position.getX()), leapToScreenY(position.getY()), 24.0f, 24.0f);
     }
-    
-    translate(width/2, height/2);
+
+    translate(width / 2, height / 2);
     for (Map.Entry entry : leap.getHandPitch().entrySet()) {
       double pitch = (Double) entry.getValue();
-      System.out.println("pitch:"+pitch);
+      System.out.println("pitch:" + pitch);
       rotateX(map((float) pitch, -1, 1, 0, TWO_PI));
     }
-    
+
     for (Map.Entry entry : leap.getHandRoll().entrySet()) {
       double roll = (Double) entry.getValue();
-      System.out.println("roll:"+roll);
+      System.out.println("roll:" + roll);
       rotateY(map((float) roll, -1, 1, 0, TWO_PI));
     }
-    
+
     for (Map.Entry entry : leap.getHandYaw().entrySet()) {
       double yaw = (Double) entry.getValue();
-      System.out.println("yaw:"+yaw);
-      //rotateY(map((float) yaw, -1, 1, 0, TWO_PI));
+      System.out.println("yaw:" + yaw);
+      // rotateY(map((float) yaw, -1, 1, 0, TWO_PI));
     }
-    
-    
+
+
     stroke(255);
     fill(190);
     box(100);
