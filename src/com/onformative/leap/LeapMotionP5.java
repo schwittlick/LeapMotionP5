@@ -35,6 +35,7 @@ import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
+import com.leapmotion.leap.Pointable;
 import com.leapmotion.leap.Vector;
 
 /**
@@ -61,10 +62,14 @@ public class LeapMotionP5 {
   protected LinkedList<Frame> lastFrames;
 
   protected Frame currentFrame;
+
   protected Finger lastDetectedFinger;
+  protected Pointable lastDetectedPointable;
+  protected Hand lastDetectedHand;
 
   private float LEAP_WIDTH = 200.0f; // in mm
-  private float LEAP_HEIGHT = 700.0f; // in mm
+  private float LEAP_HEIGHT = 500.0f; // in mm
+  private float LEAP_DEPTH = 200.0f; // in mm
 
   public LeapMotionP5(PApplet p) {
     this.p = p;
@@ -73,6 +78,8 @@ public class LeapMotionP5 {
     controller = new Controller();
 
     controller.addListener(listener);
+
+    lastDetectedFinger = new Finger();
   }
 
   public void stop() {
@@ -144,32 +151,123 @@ public class LeapMotionP5 {
     return PApplet.lerp(p.height, 0.0f, y / LEAP_HEIGHT);
   }
 
+  public float leapToScreenZ(float z) {
+    return PApplet.lerp(100, 0, z / LEAP_DEPTH);
+  }
+
+  /**
+   * 
+   * @param finger
+   * @return
+   */
+  public PVector convertFingerToPVector(Finger finger) {
+    return convertToScreenDimension(finger.tipPosition().getX(), finger.tipPosition().getY(),
+        finger.tipPosition().getZ());
+  }
+
+  /**
+   * 
+   * @param pointable
+   * @return
+   */
+  public PVector convertFingerToPVector(Pointable pointable) {
+    return convertToScreenDimension(pointable.tipPosition().getX(), pointable.tipPosition().getY(),
+        pointable.tipPosition().getZ());
+  }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public PVector convertFingerToPVector(Hand hand) {
+    return convertToScreenDimension(hand.palmPosition().getX(), hand.palmPosition().getY(), hand
+        .palmPosition().getZ());
+  }
+
+  /**
+   * converts x, y and z coordinates of the leap to the dimensions of your sketch
+   * 
+   * @param x x position in leap world coordinate system
+   * @param y y position in leap world coordinate system
+   * @param z z position in leap world coordinate system
+   * @return PVector the pvector of the point you passed in converted to the dimensions of your
+   *         processing sketch window
+   */
+  public PVector convertToScreenDimension(float x, float y, float z) {
+    PVector positionRelativeToFrame = new PVector();
+    positionRelativeToFrame.x = leapToScreenX(x);
+    positionRelativeToFrame.y = leapToScreenY(y);
+    positionRelativeToFrame.z = leapToScreenZ(z);
+    return positionRelativeToFrame;
+  }
+
   /**
    * accessing a finger by number. the number indicates the fingernumber. for example: when there
    * are two fingers detected by the leap you can access the first one by getFinger(0) and the
-   * second one by getFinger(1). if the leap does not detect a single finger and you try to access
-   * them in this way you will get a finger pointing at (0,0,0)
+   * second one by getFinger(1). this is a comfortable way to quickly access the leap in processing
    * 
    * @param fingerNr
    * @return
    */
   public Finger getFinger(int fingerNr) {
-    Finger finger = new Finger();
-
-    Frame frame = getCurrentFrame();
-    if (frame.hands().empty() == false) {
-      Hand hand = frame.hands().get(0);
-      if (hand.fingers().empty() == false) {
-        finger = hand.fingers().get(fingerNr);
-        lastDetectedFinger = finger;
-      }
-    } else if(lastDetectedFinger != null){
-      finger = lastDetectedFinger;
+    if (!getActiveFingers().isEmpty()) {
+      lastDetectedFinger = getActiveFingers().get(fingerNr);
     }
-
-    return finger;
+    return lastDetectedFinger;
   }
 
+  /**
+   * 
+   * @param pointableNr
+   * @return
+   */
+  public Pointable getPointable(int pointableNr) {
+    if (!getActivePointables().isEmpty()) {
+      lastDetectedPointable = getActivePointables().get(pointableNr);
+    }
+    return lastDetectedPointable;
+  }
+
+  /**
+   * 
+   * @param handNr
+   * @return
+   */
+  public Hand getHand(int handNr) {
+    if (!getActiveHands().isEmpty()) {
+      lastDetectedHand = getActiveHands().get(handNr);
+    }
+    return lastDetectedHand;
+  }
+
+  /**
+   * 
+   * @return ArrayList<Hand> an arraylist containing all currently tracked hands
+   */
+  public ArrayList<Hand> getActiveHands() {
+    ArrayList<Hand> hands = new ArrayList<Hand>();
+    Frame frame = getCurrentFrame();
+    if (frame.hands().empty() == false) {
+      for (Hand hand : frame.hands()) {
+        hands.add(hand);
+      }
+    }
+    return hands;
+  }
+
+  /**
+   * 
+   * @return int the number of currently tracked hands
+   */
+  public int getHandCount() {
+    return getActiveHands().size();
+  }
+
+  /**
+   * 
+   * @return ArrayList<Finger> an arraylist containing all currently tracked fingers
+   */
   public ArrayList<Finger> getActiveFingers() {
     ArrayList<Finger> fingers = new ArrayList<Finger>();
 
@@ -185,5 +283,42 @@ public class LeapMotionP5 {
     }
 
     return fingers;
+  }
+
+  /**
+   * 
+   * @return int the number of currently tracked fingers
+   */
+  public int getFingerCount() {
+    return getActiveFingers().size();
+  }
+
+  /**
+   * 
+   * @return ArrayList<Pointable> an arraylist containing all currently tracked pointables
+   */
+  public ArrayList<Pointable> getActivePointables() {
+    ArrayList<Pointable> pointables = new ArrayList<Pointable>();
+
+    Frame frame = getCurrentFrame();
+    if (frame.hands().empty() == false) {
+      for (Hand hand : frame.hands()) {
+        if (hand.pointables().empty() == false) {
+          for (Pointable poi : hand.pointables()) {
+            pointables.add(poi);
+          }
+        }
+      }
+    }
+
+    return pointables;
+  }
+
+  /**
+   * 
+   * @return int the number of currently tracked pointables
+   */
+  public int getPointableCount() {
+    return getActivePointables().size();
   }
 }
