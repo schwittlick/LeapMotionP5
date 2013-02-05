@@ -22,22 +22,10 @@ public class LeapProcessing extends PApplet {
     background(0);
     lights();
     fill(255);
-    for (Finger finger : leap.getActiveFingers()) {
+    for (Finger finger : leap.getFingerList()) {
       ellipse(leap.leapToScreenX(finger.tipPosition().getX()),
           leap.leapToScreenY(finger.tipPosition().getY()), 20, 20);
     }
-
-    translate(width / 2, height / 2);
-    for (Map.Entry entry : leap.getHandPitch().entrySet()) {
-      double pitch = (Double) entry.getValue();
-      rotateX(map((float) pitch, -1, 1, 0, TWO_PI));
-    }
-
-    for (Map.Entry entry : leap.getHandRoll().entrySet()) {
-      double roll = (Double) entry.getValue();
-      rotateY(map((float) roll, -1, 1, 0, TWO_PI));
-    }
-
 
     stroke(255);
     fill(190);

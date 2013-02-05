@@ -59,12 +59,6 @@ class LeapMotionListener extends Listener {
   public LeapMotionListener(PApplet p, LeapMotionP5 leap) {
     this.p = p;
     this.leap = leap;
-    leap.fingerPositions = new ConcurrentHashMap<Integer, Vector>();
-    leap.fingerVelocity = new ConcurrentHashMap<Integer, Vector>();
-    leap.toolPositions = new ConcurrentHashMap<Integer, Vector>();
-    leap.handPitch = new ConcurrentHashMap<Integer, Double>();
-    leap.handRoll = new ConcurrentHashMap<Integer, Double>();
-    leap.handYaw = new ConcurrentHashMap<Integer, Double>();
     leap.currentFrame = new Frame();
     leap.lastFrames = new LinkedList<Frame>();
   }
@@ -93,30 +87,10 @@ class LeapMotionListener extends Listener {
   public void onFrame(Controller controller) {
     Frame frame = controller.frame();
     leap.currentFrame = frame;
+
     if (leap.lastFrames.size() >= maxFrameCountToCheckForGestures) {
       leap.lastFrames.removeFirst();
     }
     leap.lastFrames.add(frame);
-
-    for (Hand hand : frame.hands()) {
-      int handId = hand.id();
-      Vector handDirection = hand.direction();
-      Vector palmNormal = hand.palmNormal();
-      leap.handPitch.put(handId, (double) handDirection.pitch());
-      leap.handRoll.put(handId, (double) (palmNormal.roll()));
-      leap.handYaw.put(handId, (double) (handDirection.yaw()));
-      // System.out.println("handpitch added");
-    }
-
-    for (Finger finger : frame.fingers()) {
-      int fingerId = finger.id();
-      leap.fingerPositions.put(fingerId, finger.tipPosition());
-      leap.fingerVelocity.put(fingerId, finger.tipVelocity());
-    }
-    for (Tool tool : frame.tools()) {
-      int toolId = tool.id();
-      leap.toolPositions.put(toolId, tool.tipPosition());
-
-    }
   }
 }

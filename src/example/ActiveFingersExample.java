@@ -16,7 +16,7 @@ public class ActiveFingersExample extends PApplet {
   public void draw() {
     background(0);
     fill(255);
-    for (Finger finger : leap.getActiveFingers()) {
+    for (Finger finger : leap.getFingerList()) {
       ellipse(leap.leapToScreenX(finger.tipPosition().getX()),
           leap.leapToScreenY(finger.tipPosition().getY()), 10, 10);
     }
