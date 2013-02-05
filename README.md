@@ -2,14 +2,14 @@ LeapMotionP5
 ======================
 <b>A Leap Motion Library for Processing</b> 
 
-Working with all Processing versions and all operating systems, with the newest version of the leap motion sdk.
+Working with <b>all Processing versions</b> and <b>all operating systems (OSX, Windows)</b>, with the newest version of the leap motion sdk. Moreover it is including a variety of <b>gestures</b>.
 Just download the library archive at the bottom of this readme and extract it into the libraries folder of your processing sketchbook and your're ready to go.
 
 <b>changelog 04.02.2013</b>
 
 - added VictoryGesture
 - included OneDollar Unistroke Recognizer for advanced gesture support (https://github.com/voidplus/onedollar-unistroke-recognizer) 
-
+ <img src="http://depts.washington.edu/aimgroup/proj/dollar/unistrokes.gif"></img>
 
 <b>changelog 03.02.2013</b>
 
