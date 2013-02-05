@@ -24,6 +24,7 @@ package com.onformative.leap;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentMap;
 
@@ -155,5 +156,22 @@ public class LeapMotionP5 {
 
 
     return finger;
+  }
+
+  public ArrayList<Finger> getActiveFingers() {
+    ArrayList<Finger> fingers = new ArrayList<Finger>();
+
+    Frame frame = getCurrentFrame();
+    if (frame.hands().empty() == false) {
+      for (Hand hand : frame.hands()) {
+        if (hand.fingers().empty() == false) {
+          for (Finger fin : hand.fingers()) {
+            fingers.add(fin);
+          }
+        }
+      }
+    }
+
+    return fingers;
   }
 }
