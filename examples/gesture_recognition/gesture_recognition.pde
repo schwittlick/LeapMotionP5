@@ -15,9 +15,11 @@ VictoryGesture vg;
 
 ControlP5 cp5;
 boolean showGui = false;
+String lastGesture = "";
 
 public void setup() {
   size(500, 500);
+  textSize(20);
   leap = new LeapMotionP5(this);
 
   sl = new SwipeLeftGesture(this, leap);
@@ -60,34 +62,47 @@ public void draw() {
 
   if (sl.check()) {
     System.out.println("swipe left");
+    lastGesture = "swipe left";
     fill(255, 0, 0);
     rect(0, 0, width, height);
   } 
   else if (sr.check()) {
     System.out.println("swipe right");
+    lastGesture = "swipe right";
     fill(0, 255, 0);
     rect(0, 0, width, height);
   } 
   else if (su.check()) {
     System.out.println("swipe up");
+    lastGesture = "swipe up";
     fill(0, 0, 255);
     rect(0, 0, width, height);
   } 
   else if (sd.check()) {
     System.out.println("swipe down");
+    lastGesture = "swipe down";
     fill(255, 255, 0);
     rect(0, 0, width, height);
   } 
   else if (pg.check()) {
     System.out.println("pushed");
+    lastGesture = "pushed";
     fill(255, 0, 255);
     rect(0, 0, width, height);
   } 
   else if (pug.check()) {
     System.out.println("pulled");
+    lastGesture = "pulled";
     fill(0, 255, 255);
     rect(0, 0, width, height);
+  } else if(vg.check()){
+    /*System.out.println("victory");
+    lastGesture = "victory";
+    fill(255, 255, 255);
+    rect(0, 0, width, height);*/
   }
+  fill(255);
+  text("last gesture: "+lastGesture, 20, 20);
 
   if (showGui) {
     cp5.draw();
