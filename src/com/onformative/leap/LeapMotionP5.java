@@ -61,6 +61,7 @@ public class LeapMotionP5 {
   protected LinkedList<Frame> lastFrames;
 
   protected Frame currentFrame;
+  protected Finger lastDetectedFinger;
 
   private float LEAP_WIDTH = 200.0f; // in mm
   private float LEAP_HEIGHT = 700.0f; // in mm
@@ -143,6 +144,15 @@ public class LeapMotionP5 {
     return PApplet.lerp(p.height, 0.0f, y / LEAP_HEIGHT);
   }
 
+  /**
+   * accessing a finger by number. the number indicates the fingernumber. for example: when there
+   * are two fingers detected by the leap you can access the first one by getFinger(0) and the
+   * second one by getFinger(1). if the leap does not detect a single finger and you try to access
+   * them in this way you will get a finger pointing at (0,0,0)
+   * 
+   * @param fingerNr
+   * @return
+   */
   public Finger getFinger(int fingerNr) {
     Finger finger = new Finger();
 
@@ -151,9 +161,11 @@ public class LeapMotionP5 {
       Hand hand = frame.hands().get(0);
       if (hand.fingers().empty() == false) {
         finger = hand.fingers().get(fingerNr);
+        lastDetectedFinger = finger;
       }
+    } else if(lastDetectedFinger != null){
+      finger = lastDetectedFinger;
     }
-
 
     return finger;
   }

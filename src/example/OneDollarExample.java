@@ -11,8 +11,6 @@ public class OneDollarExample extends PApplet {
 
 
   LeapMotionP5 leap;
-  static float LEAP_WIDTH = 200.0f; // in mm
-  static float LEAP_HEIGHT = 700.0f; // in mm
 
   String gesture_name;
   PVector position, centroid;
@@ -115,7 +113,7 @@ public class OneDollarExample extends PApplet {
       if (fingers.empty() == false) {
         com.leapmotion.leap.Finger finger = fingers.get(0);
         Vector position = finger.tipPosition();
-        one.update(100, leapToScreenX(position.getX()), leapToScreenY(position.getY()));
+        one.update(100, leap.leapToScreenX(position.getX()), leap.leapToScreenY(position.getY()));
       }
     }
   }
@@ -123,19 +121,6 @@ public class OneDollarExample extends PApplet {
   public void stop() {
     leap.stop();
     super.stop();
-  }
-
-  float leapToScreenX(float x) {
-    float c = width / 2.0f;
-    if (x > 0.0) {
-      return lerp(c, width, x / LEAP_WIDTH);
-    } else {
-      return lerp(c, 0.0f, -x / LEAP_WIDTH);
-    }
-  }
-
-  float leapToScreenY(float y) {
-    return lerp(height, 0.0f, y / LEAP_HEIGHT);
   }
 
 }

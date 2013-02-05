@@ -69,21 +69,11 @@ public class GestureExample extends PApplet {
   }
 
   public void draw() {
-    //System.out.println(frameRate);
     fill(0, 40);
     noStroke();
     rect(0, 0, width, height);
     
-    fill(255);
-    //ellipse(leap.getFingerPositionXYPlane().x, leap.getFingerPositionXYPlane().y, 30, 30);
-
-    for (Map.Entry entry : leap.getFingerPositions().entrySet()) {
-      Integer fingerId = (Integer) entry.getKey();
-      Vector position = (Vector) entry.getValue();
-      noStroke();
-      ellipse(leap.leapToScreenX(position.getX()), leap.leapToScreenY(position.getY()), 24.0f, 24.0f);
-    }
-    /*if (sl.check()) {
+    if (sl.check()) {
       System.out.println("swipe left");
       fill(255, 0, 0);
       rect(0, 0, width, height);
@@ -107,12 +97,6 @@ public class GestureExample extends PApplet {
       System.out.println("pulled");
       fill(0, 255, 255);
       rect(0, 0, width, height);
-    } else*/ if (vg.check()){
-      //System.out.println("victory opened");
-      //fill(255, 255, 255);
-      //rect(0, 0, width, height);
-    }  else if (vg.closed()){
-      System.out.println("victory closed");
     }
 
     if (showGui) {
