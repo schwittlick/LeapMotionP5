@@ -27,6 +27,39 @@ Download
 ========
 https://github.com/mrzl/LeapMotionP5/blob/master/LeapMotionP5.zip
 
+Examples
+========
+<b>Gesture Recognition</b>
+<pre>
+import com.onformative.leap.LeapMotionP5;
+
+LeapMotionP5 leap;
+String lastGesture = "";
+
+public void setup() {
+  size(500, 500);
+  textSize(30);
+
+  leap = new LeapMotionP5(this);
+  leap.addGesture("swipeleft");
+  leap.addGesture("swiperight");
+  leap.addGesture("circle");
+  leap.addGesture("triangle");
+  leap.start();
+}
+
+public void draw() {
+  background(0);
+  leap.gestures.one.draw();
+  leap.update();
+  text(lastGesture, 30, 30);
+}
+
+public void gestureRecognized(String gesture) {
+  lastGesture = gesture;
+}
+
+</pre>
 
 License
 =======
