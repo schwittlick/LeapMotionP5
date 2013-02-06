@@ -7,7 +7,7 @@ Just download the library archive at the bottom of this readme and extract it in
 
 Features
 ========
-Gesture Recognition
+<b>Gesture Recognition</b><br>
 It's possible to use a vast variety of gestures with the leap motion in processing.
 
 <b>One finger gestures:</b>
@@ -82,10 +82,12 @@ public void setup() {
   textSize(30);
 
   leap = new LeapMotionP5(this);
-  leap.addGesture("swipeleft");
-  leap.addGesture("swiperight");
-  leap.addGesture("circle");
-  leap.addGesture("triangle");
+  leap.addGesture(leap.gestures.SWIPE_LEFT);
+  leap.addGesture(leap.gestures.SWIPE_RIGHT);
+  leap.addGesture(leap.gestures.CIRCLE);
+  leap.addGesture(leap.gestures.TRIANGLE);
+  leap.addGesture(leap.gestures.RECTANGLE);
+  leap.addGesture(leap.gestures.ZIG_ZAG);
   leap.start();
 }
 
