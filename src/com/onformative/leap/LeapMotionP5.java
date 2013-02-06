@@ -65,6 +65,7 @@ public class LeapMotionP5 {
   private float LEAP_WIDTH = 200.0f; // in mm
   private float LEAP_HEIGHT = 500.0f; // in mm
   private float LEAP_DEPTH = 200.0f; // in mm
+  
 
   public LeapMotionP5(PApplet p) {
     this.p = p;
@@ -250,7 +251,6 @@ public class LeapMotionP5 {
     for (Finger finger : hand.fingers()) {
       fingers.add(finger);
     }
-
     return fingers;
   }
 
@@ -350,5 +350,9 @@ public class LeapMotionP5 {
    */
   public int getToolCount() {
     return getToolList().size();
+  }
+
+  public void getRotationsMatrix(Hand hand) {
+    System.out.println(hand.rotationMatrix(currentFrame));
   }
 }

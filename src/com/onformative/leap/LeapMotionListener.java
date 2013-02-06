@@ -64,19 +64,19 @@ class LeapMotionListener extends Listener {
   }
 
   public void onInit(Controller controller) {
-    System.out.println("Initialized");
+    System.out.println("Leap Motion Initialized");
   }
 
   public void onConnect(Controller controller) {
-    System.out.println("Connected");
+    System.out.println("Leap Motion Connected");
   }
 
   public void onDisconnect(Controller controller) {
-    System.out.println("Disconnected");
+    System.out.println("Leap Motion Disconnected");
   }
 
   public void onExit(Controller controller) {
-    System.out.println("Exited");
+    System.out.println("Leap Motion Exited");
   }
 
   /**

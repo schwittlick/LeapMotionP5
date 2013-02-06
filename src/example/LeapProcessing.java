@@ -26,7 +26,9 @@ public class LeapProcessing extends PApplet {
       ellipse(leap.leapToScreenX(finger.tipPosition().getX()),
           leap.leapToScreenY(finger.tipPosition().getY()), 20, 20);
     }
-
+    translate(width/2, height/2);
+    
+    //rotate(leap.getHand(0).palmPosition().);
     stroke(255);
     fill(190);
     box(100);
