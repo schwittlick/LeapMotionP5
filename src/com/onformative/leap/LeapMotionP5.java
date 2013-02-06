@@ -38,6 +38,7 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Pointable;
 import com.leapmotion.leap.Tool;
 import com.leapmotion.leap.Vector;
+import com.onformative.leap.gestures.Gestures;
 
 /**
  * LeapMotionP5.java
@@ -65,7 +66,9 @@ public class LeapMotionP5 {
   private float LEAP_WIDTH = 200.0f; // in mm
   private float LEAP_HEIGHT = 500.0f; // in mm
   private float LEAP_DEPTH = 200.0f; // in mm
-  
+
+  public Gestures gestures;
+
 
   public LeapMotionP5(PApplet p) {
     this.p = p;
@@ -78,10 +81,33 @@ public class LeapMotionP5 {
     lastDetectedFinger = new Finger();
     lastDetectedPointable = new Pointable();
     lastDetectedHand = new Hand();
+
+
+  }
+
+  public void start() {
+    gestures.start();
   }
 
   public void stop() {
     controller.removeListener(listener);
+  }
+
+  public void addGesture(String gestureName) {
+    if (gestures == null) {
+      gestures = new Gestures(p, this);
+    }
+    gestures.addGesture(gestureName);
+  }
+
+  public PApplet getParent() {
+    return p;
+  }
+
+  public void update() {
+    if (gestures != null) {
+      gestures.update();
+    }
   }
 
   public Frame getCurrentFrame() {
@@ -113,6 +139,10 @@ public class LeapMotionP5 {
   }
 
   public float leapToScreenX(float x) {
+    /*int startX = -243;
+    int endX = 256;
+    float valueMapped = PApplet.map(x, startX, endX, 0, p.width);
+    return valueMapped;*/
     float c = p.width / 2.0f;
     if (x > 0.0) {
       return PApplet.lerp(c, p.width, x / LEAP_WIDTH);
@@ -122,10 +152,18 @@ public class LeapMotionP5 {
   }
 
   public float leapToScreenY(float y) {
+    /*int startY = 50;
+    int endY = 350;
+    float valueMapped = PApplet.map(y, startY, endY, 0, p.height);
+    return valueMapped;*/
     return PApplet.lerp(p.height, 0.0f, y / LEAP_HEIGHT);
   }
 
   public float leapToScreenZ(float z) {
+    /*int startZ = -51;
+    int endZ = 149;
+    float valueMapped = PApplet.map(z, startZ, endZ, 0, p.width);
+    return valueMapped;*/
     return PApplet.lerp(0, p.width, z / LEAP_DEPTH);
   }
 
