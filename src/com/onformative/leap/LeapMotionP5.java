@@ -85,6 +85,8 @@ public class LeapMotionP5 {
     lastDetectedPointable = new Pointable();
     lastDetectedHand = new Hand();
     lastDetectedTool = new Tool();
+
+    gestures = new GestureHandler(p, this);
   }
 
   /**
@@ -109,9 +111,6 @@ public class LeapMotionP5 {
    * @param gestureName
    */
   public void addGesture(String gestureName) {
-    if (gestures == null) {
-      gestures = new GestureHandler(p, this);
-    }
     gestures.addGesture(gestureName);
   }
 
@@ -121,6 +120,14 @@ public class LeapMotionP5 {
    */
   public PApplet getParent() {
     return p;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public Controller getController() {
+    return controller;
   }
 
   /**
@@ -150,6 +157,23 @@ public class LeapMotionP5 {
    */
   public LinkedList<Frame> getFrames() {
     return lastFrames;
+  }
+
+  /**
+   * the last entry in the linkedlist ist the newest frame and the first one is the oldest
+   * 
+   * @param frameCount
+   * @return
+   */
+  public LinkedList<Frame> getFrames(int frameCount) {
+    LinkedList<Frame> frames = new LinkedList<Frame>();
+    for (int i = 0; i < frameCount; i++) {
+      if (getFrames().size() > frameCount) {
+        Frame fr = getFrames().get(getFrames().size() - frameCount + i);
+        frames.add(fr);
+      }
+    }
+    return frames;
   }
 
   /**
@@ -290,10 +314,32 @@ public class LeapMotionP5 {
 
   /**
    * 
+   * @return ArrayList<Hand> an arraylist containing all currently tracked hands
+   */
+  public ArrayList<Hand> getHandList(Frame frame) {
+    ArrayList<Hand> hands = new ArrayList<Hand>();
+    if (frame.hands().empty() == false) {
+      for (Hand hand : frame.hands()) {
+        hands.add(hand);
+      }
+    }
+    return hands;
+  }
+
+  /**
+   * 
    * @return int the number of currently tracked hands
    */
   public int getHandCount() {
     return getHandList().size();
+  }
+
+  /**
+   * 
+   * @return int the number of currently tracked hands
+   */
+  public int getHandCount(Frame frame) {
+    return getHandList(frame).size();
   }
 
   /**
@@ -334,12 +380,32 @@ public class LeapMotionP5 {
     return fingers;
   }
 
+  public ArrayList<Finger> getFingerList(Frame frame) {
+    ArrayList<Finger> fingers = new ArrayList<Finger>();
+
+    if (frame.hands().empty() == false) {
+      for (Hand hand : frame.hands()) {
+        fingers.addAll(getFingerList(hand));
+      }
+    }
+
+    return fingers;
+  }
+
   /**
    * 
    * @return
    */
   public int getFingerCount() {
     return getFingerList().size();
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public int getFingerCount(Frame frame) {
+    return getFingerList(frame).size();
   }
 
   /**
@@ -404,10 +470,34 @@ public class LeapMotionP5 {
 
   /**
    * 
+   * @return ArrayList<Pointable> an arraylist containing all currently tracked pointables
+   */
+  public ArrayList<Pointable> getPointableList(Frame frame) {
+    ArrayList<Pointable> pointables = new ArrayList<Pointable>();
+
+    if (frame.hands().empty() == false) {
+      for (Hand hand : frame.hands()) {
+        pointables.addAll(getPointableList(hand));
+      }
+    }
+
+    return pointables;
+  }
+
+  /**
+   * 
    * @return int the number of currently tracked pointables
    */
   public int getPointableCount() {
     return getPointableList().size();
+  }
+
+  /**
+   * 
+   * @return int the number of currently tracked pointables
+   */
+  public int getPointableCount(Frame frame) {
+    return getPointableList(frame).size();
   }
 
   public ArrayList<Pointable> getPointableList(Hand hand) {
@@ -470,8 +560,32 @@ public class LeapMotionP5 {
    * 
    * @return
    */
+  public ArrayList<Tool> getToolList(Frame frame) {
+    ArrayList<Tool> tools = new ArrayList<Tool>();
+
+    if (frame.hands().empty() == false) {
+      for (Hand hand : frame.hands()) {
+        tools.addAll(getToolList(hand));
+      }
+    }
+
+    return tools;
+  }
+
+  /**
+   * 
+   * @return
+   */
   public int getToolCount() {
     return getToolList().size();
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public int getToolCount(Frame frame) {
+    return getToolList(frame).size();
   }
 
   /**

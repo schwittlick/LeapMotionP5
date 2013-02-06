@@ -1,7 +1,9 @@
 package example;
 
+import java.util.LinkedList;
 import java.util.Map;
 
+import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Vector;
 import com.onformative.leap.LeapMotionP5;
 
@@ -16,10 +18,8 @@ public class LeapProcessing extends PApplet {
 
   public void setup() {
     size(500, 500, P3D);
-
+    frameRate(120);
     leap = new LeapMotionP5(this);
-    
-    
   }
 
   public void draw() {
