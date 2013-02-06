@@ -5,23 +5,38 @@ LeapMotionP5
 Working with <b>all Processing versions</b> and <b>all operating systems (OSX, Windows)</b>, with the newest version of the leap motion sdk. Moreover it is including a variety of <b>gestures</b>.
 Just download the library archive at the bottom of this readme and extract it into the libraries folder of your processing sketchbook and your're ready to go.
 
-<b>changelog 04.02.2013</b>
+Features
+========
+Gesture Recognition
+It's possible to use a vast variety of gestures with the leap motion in processing.
 
-- added VictoryGesture
-- included OneDollar Unistroke Recognizer for advanced gesture support (https://github.com/voidplus/onedollar-unistroke-recognizer) 
- <img src="http://depts.washington.edu/aimgroup/proj/dollar/unistrokes.gif"></img>
+<b>One finger gestures:</b>
+- swipe left
+- swipe right
+- swipe up
+- swipe down
+- push
+- pull
 
-<b>changelog 03.02.2013</b>
+<b>One finger drawing gestures:</b>
+- circle
+- triangle
+- rectangle
+- x
+- check
+- charet
+- zig-zag
+- arrow
+- leftsquarebracket
+- rightsquarebracket
+- leftcurlybrace
+- rightcurlybrace
+- v
+- delete
+- star
+- pigtail
 
-added some gestures. right now the gestures can be triggered with either one or more fingers- i will change this 
-according to the next updated of the SDK, which might have some gesture support already included. Those gestures have
-been added:
-- SwipeLeft
-- SwipeRight
-- SwipeUp
-- SwipeDown
-- Push
-- Pull
+<img src="http://depts.washington.edu/aimgroup/proj/dollar/unistrokes.gif"></img>
 
 Download
 ========
