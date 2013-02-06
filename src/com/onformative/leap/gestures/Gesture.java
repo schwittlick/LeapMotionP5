@@ -26,23 +26,23 @@ package com.onformative.leap.gestures;
 
 import com.onformative.leap.LeapMotionP5;
 
-import processing.core.PApplet;
-
 /**
  * 
  * @author Marcel Schwittlick
  * 
  */
 public class Gesture {
-  protected PApplet parent;
   protected LeapMotionP5 leap;
 
   protected int gestureTimeoutInMillis = 100;
   protected float velocityThreshold = 1500;
 
-  public Gesture(PApplet parent, LeapMotionP5 leap) {
-    this.parent = parent;
+  public Gesture(LeapMotionP5 leap) {
     this.leap = leap;
+  }
+
+  public boolean check() {
+    return true;
   }
 
   /**

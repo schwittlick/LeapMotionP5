@@ -29,8 +29,6 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
 import com.onformative.leap.LeapMotionP5;
 
-import processing.core.PApplet;
-
 /**
  * TODO: Implement to check for a minimal distance to be performed, when the gesture is triggered
  * 
@@ -41,8 +39,8 @@ public class SwipeLeftGesture extends Gesture {
   private boolean blockSwipeLeft = false;
   private int millisBlockSwipeLeftStarted;
 
-  public SwipeLeftGesture(PApplet parent, LeapMotionP5 leap) {
-    super(parent, leap);
+  public SwipeLeftGesture(LeapMotionP5 leap) {
+    super(leap);
   }
 
   /**
@@ -63,7 +61,7 @@ public class SwipeLeftGesture extends Gesture {
         if (!fingers.empty()) {
           if (fingers.get(0).tipVelocity().getX() < -velocityThreshold) {
             blockSwipeLeft = true;
-            millisBlockSwipeLeftStarted = parent.millis();
+            millisBlockSwipeLeftStarted = leap.getParent().millis();
             return true;
           }
         }
@@ -77,7 +75,7 @@ public class SwipeLeftGesture extends Gesture {
    * recognized is less than gestureTimeOutInMillis milliseconds ago
    */
   private void checkIfBlocked() {
-    if (parent.millis() - millisBlockSwipeLeftStarted > gestureTimeoutInMillis) {
+    if (leap.getParent().millis() - millisBlockSwipeLeftStarted > gestureTimeoutInMillis) {
       blockSwipeLeft = false;
     }
   }

@@ -24,8 +24,6 @@ package com.onformative.leap.gestures;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
-import processing.core.PApplet;
-
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
@@ -40,8 +38,8 @@ public class SwipeUpGesture extends Gesture {
   private boolean blockSwipeUp = false;
   private int millisBlockSwipeUpStarted;
 
-  public SwipeUpGesture(PApplet parent, LeapMotionP5 leap) {
-    super(parent, leap);
+  public SwipeUpGesture(LeapMotionP5 leap) {
+    super(leap);
     // TODO Auto-generated constructor stub
   }
 
@@ -63,7 +61,7 @@ public class SwipeUpGesture extends Gesture {
         if (!fingers.empty()) {
           if (fingers.get(0).tipVelocity().getY() > velocityThreshold) {
             blockSwipeUp = true;
-            millisBlockSwipeUpStarted = parent.millis();
+            millisBlockSwipeUpStarted = leap.getParent().millis();
             return true;
           }
         }
@@ -77,7 +75,7 @@ public class SwipeUpGesture extends Gesture {
    * recognized is less than gestureTimeOutInMillis milliseconds ago
    */
   private void checkIfBlocked() {
-    if (parent.millis() - millisBlockSwipeUpStarted > gestureTimeoutInMillis) {
+    if (leap.getParent().millis() - millisBlockSwipeUpStarted > gestureTimeoutInMillis) {
       blockSwipeUp = false;
     }
   }

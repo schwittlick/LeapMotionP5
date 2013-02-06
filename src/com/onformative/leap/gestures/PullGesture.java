@@ -24,8 +24,6 @@ package com.onformative.leap.gestures;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
-import processing.core.PApplet;
-
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
@@ -40,8 +38,8 @@ public class PullGesture extends Gesture {
   private boolean blockPull = false;
   private int millisBlockPullStarted;
 
-  public PullGesture(PApplet parent, LeapMotionP5 leap) {
-    super(parent, leap);
+  public PullGesture(LeapMotionP5 leap) {
+    super(leap);
     // TODO Auto-generated constructor stub
   }
 
@@ -63,7 +61,7 @@ public class PullGesture extends Gesture {
         if (!fingers.empty()) {
           if (fingers.get(0).tipVelocity().getZ() > velocityThreshold) {
             blockPull = true;
-            millisBlockPullStarted = parent.millis();
+            millisBlockPullStarted = leap.getParent().millis();
             return true;
           }
         }
@@ -77,7 +75,7 @@ public class PullGesture extends Gesture {
    * recognized is less than gestureTimeOutInMillis milliseconds ago
    */
   private void checkIfBlocked() {
-    if (parent.millis() - millisBlockPullStarted > gestureTimeoutInMillis) {
+    if (leap.getParent().millis() - millisBlockPullStarted > gestureTimeoutInMillis) {
       blockPull = false;
     }
   }

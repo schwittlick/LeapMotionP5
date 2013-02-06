@@ -24,6 +24,8 @@ package com.onformative.leap.gestures;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
+import java.util.ArrayList;
+
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
@@ -34,48 +36,59 @@ import com.onformative.leap.LeapMotionP5;
  * @author Marcel Schwittlick
  * 
  */
-public class SwipeRightGesture extends Gesture {
-  private boolean blockSwipeRight = false;
-  private int millisBlockSwipeRightStarted;
+public class VictoryGesture extends Gesture {
+  private int lastFingerCount;
 
-  public SwipeRightGesture(LeapMotionP5 leap) {
+  public VictoryGesture(LeapMotionP5 leap) {
     super(leap);
+
+    lastFingerCount = 0;
   }
 
-  /**
-   * checks if the gesture has been performed
-   * 
-   * @return boolean returns true, if the gesture has been performed
-   */
   public boolean check() {
-    Frame frame = leap.getCurrentFrame();
-    checkIfBlocked();
+    ArrayList<Frame> frames = new ArrayList<Frame>();
+    frames.add(leap.getFrames().getLast());
+    frames.add(leap.getFrames().get(leap.getFrames().size() - 2));
 
-    if (!blockSwipeRight) {
+    for (Frame frame : frames) {
       if (!frame.hands().empty()) {
-
-        // Get the first hand
         Hand hand = frame.hands().get(0);
         FingerList fingers = hand.fingers();
         if (!fingers.empty()) {
-          if (fingers.get(0).tipVelocity().getX() > velocityThreshold) {
-            blockSwipeRight = true;
-            millisBlockSwipeRightStarted = leap.getParent().millis();
+          if (lastFingerCount == 1 && fingers.count() == 2) {
+            lastFingerCount = fingers.count();
             return true;
           }
+          lastFingerCount = fingers.count();
         }
       }
     }
     return false;
   }
 
-  /**
-   * Checks if the gesture is blocked. Returns true if the last time this gesture has been
-   * recognized is less than gestureTimeOutInMillis milliseconds ago
-   */
-  private void checkIfBlocked() {
-    if (leap.getParent().millis() - millisBlockSwipeRightStarted > gestureTimeoutInMillis) {
-      blockSwipeRight = false;
+  public boolean closed() {
+    Frame frame1 = leap.getFrames().getLast();
+    Frame frame2 = leap.getFrames().get(leap.getFrames().size() - 2);
+
+    // System.out.println(frame1.timestamp());
+    // System.out.println(frame2.timestamp());
+
+
+    if (!frame1.hands().empty() && !frame2.hands().empty()) {
+      Hand hand1 = frame1.hands().get(0);
+      Hand hand2 = frame2.hands().get(0);
+      FingerList fingers1 = hand1.fingers();
+      FingerList fingers2 = hand2.fingers();
+      if (!fingers1.empty() && !fingers2.empty()) {
+        // System.out.println("fingers1 count: " + fingers1.count());
+        // System.out.println("fingers2 count: " + fingers2.count());
+        if (fingers1.count() == 2 && fingers2.count() == 1) {
+          // System.out.println("hey");
+          return true;
+        }
+      }
     }
+
+    return false;
   }
 }

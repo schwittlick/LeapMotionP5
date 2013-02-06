@@ -24,8 +24,6 @@ package com.onformative.leap.gestures;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
-import processing.core.PApplet;
-
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
@@ -39,8 +37,8 @@ public class PushGesture extends Gesture {
   private boolean blockPush = false;
   private int millisBlockPushStarted;
 
-  public PushGesture(PApplet parent, LeapMotionP5 leap) {
-    super(parent, leap);
+  public PushGesture(LeapMotionP5 leap) {
+    super(leap);
     // TODO Auto-generated constructor stub
   }
 
@@ -62,7 +60,7 @@ public class PushGesture extends Gesture {
         if (!fingers.empty()) {
           if (fingers.get(0).tipVelocity().getZ() < -velocityThreshold) {
             blockPush = true;
-            millisBlockPushStarted = parent.millis();
+            millisBlockPushStarted = leap.getParent().millis();
             return true;
           }
         }
@@ -76,7 +74,7 @@ public class PushGesture extends Gesture {
    * recognized is less than gestureTimeOutInMillis milliseconds ago
    */
   private void checkIfBlocked() {
-    if (parent.millis() - millisBlockPushStarted > gestureTimeoutInMillis) {
+    if (leap.getParent().millis() - millisBlockPushStarted > gestureTimeoutInMillis) {
       blockPush = false;
     }
   }
