@@ -82,12 +82,30 @@ public void setup() {
   textSize(30);
 
   leap = new LeapMotionP5(this);
+  
   leap.addGesture(leap.gestures.SWIPE_LEFT);
   leap.addGesture(leap.gestures.SWIPE_RIGHT);
+  leap.addGesture(leap.gestures.SWIPE_UP);
+  leap.addGesture(leap.gestures.SWIPE_DOWN);
+  leap.addGesture(leap.gestures.PUSH);
+  leap.addGesture(leap.gestures.PULL);
   leap.addGesture(leap.gestures.CIRCLE);
   leap.addGesture(leap.gestures.TRIANGLE);
   leap.addGesture(leap.gestures.RECTANGLE);
   leap.addGesture(leap.gestures.ZIG_ZAG);
+  leap.addGesture(leap.gestures.X);
+  //leap.addGesture(leap.gestures.CHECK);
+  //leap.addGesture(leap.gestures.CHARET);
+  //leap.addGesture(leap.gestures.ARROW);
+  //leap.addGesture(leap.gestures.LEFT_CURLY_BRACKET);
+  //leap.addGesture(leap.gestures.RIGHT_CURLY_BRACKET);
+  //leap.addGesture(leap.gestures.LEFT_SQUARE_BRACKET);
+  //leap.addGesture(leap.gestures.RIGHT_SQUARE_BRACKET);
+  //leap.addGesture(leap.gestures.V);
+  //leap.addGesture(leap.gestures.DELETE);
+  //leap.addGesture(leap.gestures.STAR);
+  //leap.addGesture(leap.gestures.PIGTAIL);
+  
   leap.start();
 }
 
