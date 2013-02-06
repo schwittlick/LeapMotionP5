@@ -7,7 +7,7 @@ Just download the library archive at the bottom of this readme and extract it in
 
 Features
 ========
-Gesture Recognition
+<b>Gesture Recognition</b><br>
 It's possible to use a vast variety of gestures with the leap motion in processing.
 
 <b>One finger gestures:</b>
