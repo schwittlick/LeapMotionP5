@@ -44,6 +44,7 @@ import com.onformative.leap.onedollar.OneDollar;
 public class OneDollarGestures extends Gesture {
 
   private OneDollar one;
+  private String callbackMethodName = "gestureRecognized";
 
   public OneDollarGestures(PApplet parent, LeapMotionP5 leap) {
     super(leap);
@@ -176,7 +177,7 @@ public class OneDollarGestures extends Gesture {
   }
 
   public void addGesture(String gesture) {
-    one.bind(gesture, "detected");
+    one.bind(gesture, callbackMethodName);
   }
 
   public void draw() {

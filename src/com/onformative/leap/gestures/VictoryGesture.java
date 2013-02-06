@@ -25,6 +25,7 @@ package com.onformative.leap.gestures;
  */
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
@@ -47,9 +48,12 @@ public class VictoryGesture extends Gesture {
 
   public boolean check() {
     ArrayList<Frame> frames = new ArrayList<Frame>();
-    frames.add(leap.getFrames().getLast());
-    frames.add(leap.getFrames().get(leap.getFrames().size() - 2));
-
+    try {
+      frames.add(leap.getFrames().getLast());
+      frames.add(leap.getFrames().get(leap.getFrames().size() - 2));
+    } catch (NoSuchElementException e) {
+      return false;
+    }
     for (Frame frame : frames) {
       if (!frame.hands().empty()) {
         Hand hand = frame.hands().get(0);

@@ -8,6 +8,7 @@ import com.onformative.leap.LeapMotionP5;
 
 public class Gestures {
   private ArrayList<Gesture> gestures;
+  public OneDollarGestures one;
   private String callbackMethodName;
   private PApplet parent;
   private LeapMotionP5 leap;
@@ -15,21 +16,28 @@ public class Gestures {
   private boolean blocked = false;
   private int millisStarted;
 
-  private int gestureTimeoutMillis = 1500;
+  private int gestureTimeoutMillis = 150;
 
   public Gestures(PApplet parent, LeapMotionP5 leap) {
     this.parent = parent;
     this.leap = leap;
 
     gestures = new ArrayList<Gesture>();
+    one = new OneDollarGestures(parent, leap);
 
     callbackMethodName = "gestureRecognized";
+  }
+
+  public void start() {
+    one.start();
   }
 
   public void update() {
     checkIfBlocked();
 
     if (!blocked) {
+      one.update();
+
       for (Gesture gesture : gestures) {
         if (gesture.check()) {
           if (gesture.getClass().getName().equals("com.onformative.leap.gestures.SwipeLeftGesture")) {
@@ -154,6 +162,41 @@ public class Gestures {
       gestures.add(new PullGesture(leap));
     } else if (gestureName.equals("victory")) {
       gestures.add(new VictoryGesture(leap));
+    }
+
+
+    if (gestureName.equals("circle")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("triangle")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("rectangle")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("x")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("check")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("charet")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("zig-zag")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("arrow")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("leftsquarebracket")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("rightsquarebracket")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("v")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("delete")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("leftcurlybrace")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("rightcurlybrace")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("star")) {
+      one.addGesture(gestureName);
+    } else if (gestureName.equals("pigtail")) {
+      one.addGesture(gestureName);
     }
   }
 }
