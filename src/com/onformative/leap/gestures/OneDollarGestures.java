@@ -28,7 +28,7 @@ import processing.core.PApplet;
 
 import com.leapmotion.leap.Vector;
 import com.onformative.leap.LeapMotionP5;
-import com.onformative.leap.onedollar.OneDollar;
+import com.onformative.leap.gestures.onedollar.OneDollar;
 
 /**
  * OneDollarGestures.java
@@ -175,6 +175,10 @@ public class OneDollarGestures extends Gesture {
   public void start() {
     one.start(100);
   }
+  
+  public void stop(){
+    one.dispose();
+  }
 
   public void addGesture(String gesture) {
     one.bind(gesture, callbackMethodName);
@@ -187,7 +191,7 @@ public class OneDollarGestures extends Gesture {
   }
 
   public void update() {
-    com.leapmotion.leap.Frame frame = leap.getCurrentFrame();
+    com.leapmotion.leap.Frame frame = leap.getFrame();
     if (frame.hands().empty() == false) {
       com.leapmotion.leap.Hand hand = frame.hands().get(0);
       com.leapmotion.leap.FingerList fingers = hand.fingers();
@@ -200,7 +204,18 @@ public class OneDollarGestures extends Gesture {
     one.check(); // run the gesture detection
   }
 
+  /**
+   * 
+   */
   public void exit() {
     one.dispose();
+  }
+  
+  /**
+   * 
+   * @return
+   */
+  public String getShortname(){
+    return "onedollar";
   }
 }

@@ -48,7 +48,7 @@ public class PushGesture extends Gesture {
    * @return boolean returns true, if the gesture has been performed
    */
   public boolean check() {
-    Frame frame = leap.getCurrentFrame();
+    Frame frame = leap.getFrame();
     checkIfBlocked();
 
     if (!blockPush) {
@@ -79,5 +79,11 @@ public class PushGesture extends Gesture {
     }
   }
 
-
+  /**
+   * 
+   * @return
+   */
+  public String getShortname(){
+    return "push";
+  }
 }

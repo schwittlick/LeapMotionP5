@@ -35,13 +35,13 @@ public class GestureExample extends PApplet {
     size(500, 500);
     leap = new LeapMotionP5(this);
 
-    sl = new SwipeLeftGesture(this, leap);
-    sr = new SwipeRightGesture(this, leap);
-    su = new SwipeUpGesture(this, leap);
-    sd = new SwipeDownGesture(this, leap);
-    pg = new PushGesture(this, leap);
-    pug = new PullGesture(this, leap);
-    vg = new VictoryGesture(this, leap);
+    sl = new SwipeLeftGesture(leap);
+    sr = new SwipeRightGesture(leap);
+    su = new SwipeUpGesture(leap);
+    sd = new SwipeDownGesture(leap);
+    pg = new PushGesture(leap);
+    pug = new PullGesture(leap);
+    vg = new VictoryGesture(leap);
 
     cp5 = new ControlP5(this);
     cp5.setAutoDraw(false);

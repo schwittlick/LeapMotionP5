@@ -49,7 +49,7 @@ public class SwipeUpGesture extends Gesture {
    * @return boolean returns true, if the gesture has been performed
    */
   public boolean check() {
-    Frame frame = leap.getCurrentFrame();
+    Frame frame = leap.getFrame();
     checkIfBlocked();
 
     if (!blockSwipeUp) {
@@ -80,4 +80,11 @@ public class SwipeUpGesture extends Gesture {
     }
   }
 
+  /**
+   * 
+   * @return
+   */
+  public String getShortname(){
+    return "swipeup";
+  }
 }

@@ -41,6 +41,11 @@ public class Gesture {
     this.leap = leap;
   }
 
+  /**
+   * checks if the gesture is true
+   * 
+   * @return
+   */
   public boolean check() {
     return true;
   }
@@ -62,5 +67,13 @@ public class Gesture {
    */
   public void setGestureTimeoutMillis(int millis) {
     this.gestureTimeoutInMillis = millis;
+  }
+  
+  /**
+   * 
+   * @return
+   */
+  public String getShortname(){
+    return "gesture";
   }
 }

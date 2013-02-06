@@ -95,4 +95,12 @@ public class VictoryGesture extends Gesture {
 
     return false;
   }
+
+  /**
+   * 
+   * @return
+   */
+  public String getShortname() {
+    return "victory";
+  }
 }

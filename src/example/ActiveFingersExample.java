@@ -4,6 +4,7 @@ import com.leapmotion.leap.Finger;
 import com.onformative.leap.LeapMotionP5;
 
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class ActiveFingersExample extends PApplet {
   LeapMotionP5 leap;
@@ -17,13 +18,12 @@ public class ActiveFingersExample extends PApplet {
     background(0);
     fill(255);
     for (Finger finger : leap.getFingerList()) {
-      ellipse(leap.leapToScreenX(finger.tipPosition().getX()),
-          leap.leapToScreenY(finger.tipPosition().getY()), 10, 10);
+      PVector fingerPos = leap.convertFingerToPVector(finger);
+      ellipse(fingerPos.x, fingerPos.y, 10, 10);
     }
   }
 
   public void stop() {
     leap.stop();
-    super.stop();
   }
 }

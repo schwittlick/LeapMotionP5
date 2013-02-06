@@ -49,7 +49,7 @@ public class SwipeLeftGesture extends Gesture {
    * @return boolean returns true, if the gesture has been performed
    */
   public boolean check() {
-    Frame frame = leap.getCurrentFrame();
+    Frame frame = leap.getFrame();
     checkIfBlocked();
 
     if (!blockSwipeLeft) {
@@ -78,5 +78,13 @@ public class SwipeLeftGesture extends Gesture {
     if (leap.getParent().millis() - millisBlockSwipeLeftStarted > gestureTimeoutInMillis) {
       blockSwipeLeft = false;
     }
+  }
+  
+  /**
+   * 
+   * @return
+   */
+  public String getShortname(){
+    return "swipeleft";
   }
 }

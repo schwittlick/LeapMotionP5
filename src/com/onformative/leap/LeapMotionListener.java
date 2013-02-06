@@ -25,17 +25,10 @@ package com.onformative.leap;
  */
 
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
-
-import processing.core.PApplet;
 
 import com.leapmotion.leap.Controller;
-import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
-import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Listener;
-import com.leapmotion.leap.Tool;
-import com.leapmotion.leap.Vector;
 
 /**
  * LeapMotionListener.java
@@ -46,7 +39,6 @@ import com.leapmotion.leap.Vector;
  *           this listener is listening for the events of the offical leap motion sdk
  */
 class LeapMotionListener extends Listener {
-  private PApplet p;
   private LeapMotionP5 leap;
 
   private int maxFrameCountToCheckForGestures = 250;
@@ -56,8 +48,7 @@ class LeapMotionListener extends Listener {
    * @param p PApplet the processing applet
    * @param leap LeapMotionP5 an instance of the LeapMotionP5 class
    */
-  public LeapMotionListener(PApplet p, LeapMotionP5 leap) {
-    this.p = p;
+  public LeapMotionListener(LeapMotionP5 leap) {
     this.leap = leap;
     leap.currentFrame = new Frame();
     leap.lastFrames = new LinkedList<Frame>();
