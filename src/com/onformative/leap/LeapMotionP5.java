@@ -243,49 +243,6 @@ public class LeapMotionP5 {
 
   /**
    * 
-   * @param finger
-   * @return
-   */
-  public PVector convertFingerToPVector(Finger finger) {
-    PVector fingerPos =
-        convertToScreenDimension(finger.tipPosition().getX(), finger.tipPosition().getY(), finger
-            .tipPosition().getZ());
-
-    return fingerPos;
-  }
-
-  /**
-   * 
-   * @param pointable
-   * @return
-   */
-  public PVector convertPointableToPVector(Pointable pointable) {
-    return convertToScreenDimension(pointable.tipPosition().getX(), pointable.tipPosition().getY(),
-        pointable.tipPosition().getZ());
-  }
-
-  /**
-   * 
-   * @param hand
-   * @return
-   */
-  public PVector convertHandToPVector(Hand hand) {
-    return convertToScreenDimension(hand.palmPosition().getX(), hand.palmPosition().getY(), hand
-        .palmPosition().getZ());
-  }
-
-  /**
-   * 
-   * @param tool
-   * @return
-   */
-  public PVector convertToolToPVector(Tool tool) {
-    return convertToScreenDimension(tool.tipPosition().getX(), tool.tipPosition().getY(), tool
-        .tipPosition().getZ());
-  }
-
-  /**
-   * 
    * @param vector
    * @return
    */
@@ -362,19 +319,42 @@ public class LeapMotionP5 {
    */
   public Hand getHand(int handNr) {
     if (!getHandList().isEmpty()) {
-      lastDetectedHand = getHandList().get(handNr);
+      try {
+        lastDetectedHand = getHandList().get(handNr);
+      } catch (IndexOutOfBoundsException e) {
+        // ignore
+      }
     }
     return lastDetectedHand;
   }
 
   /**
    * 
-   * @param handNr
+   * @param hand
    * @return
    */
-  public PVector getHandPalmPVector(int handNr) {
-    return convertHandToPVector(getHand(handNr));
+  public float getPitch(Hand hand) {
+    return (float) Math.toRadians(hand.palmPosition().pitch());
   }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public float getRoll(Hand hand) {
+    return (float) Math.toRadians(hand.palmPosition().roll());
+  }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public float getYaw(Hand hand) {
+    return (float) Math.toRadians(hand.palmPosition().yaw());
+  }
+
 
   /**
    * 
@@ -453,57 +433,92 @@ public class LeapMotionP5 {
    */
   public Finger getFinger(int fingerNr) {
     if (!getFingerList().isEmpty()) {
-      lastDetectedFinger = getFingerList().get(fingerNr);
+      try {
+        lastDetectedFinger = getFingerList().get(fingerNr);
+      } catch (IndexOutOfBoundsException e) {
+        // ignore
+      }
     }
     return lastDetectedFinger;
   }
 
   /**
    * 
-   * @param fingerNr
+   * @param pointable
    * @return
    */
-  public PVector getFingerTipPVector(int fingerNr) {
-    return convertFingerToPVector(getFinger(fingerNr));
+  public PVector getTip(Pointable pointable) {
+    return convertToScreenDimension(pointable.tipPosition().getX(), pointable.tipPosition().getY(),
+        pointable.tipPosition().getZ());
+  }
+
+  public PVector getPosition(Hand hand) {
+    return convertVectorToPVector(hand.palmPosition());
+  }
+
+  public PVector getNormal(Hand hand) {
+    return convertVectorToPVector(hand.palmNormal());
   }
 
   /**
    * 
-   * @param finger
+   * @param pointable
    * @return
    */
-  public PVector getFingerTipPosition(Finger finger) {
-    return convertFingerToPVector(finger);
-  }
-
-  /**
-   * 
-   * @param finger
-   * @return
-   */
-  public Vector getKnuckle(Finger finger) {
+  public PVector getOrigin(Pointable pointable) {
     Vector anklePos;
 
-    float length = finger.length();
+    float length = pointable.length();
     PVector direction = new PVector();
-    direction.x = finger.direction().getX();
-    direction.y = finger.direction().getY();
-    direction.z = finger.direction().getZ();
+    direction.x = pointable.direction().getX();
+    direction.y = pointable.direction().getY();
+    direction.z = pointable.direction().getZ();
     direction.mult(length);
     anklePos =
-        new Vector(finger.tipPosition().getX() - direction.x, finger.tipPosition().getY()
-            - direction.y, finger.tipPosition().getZ() - direction.z);
+        new Vector(pointable.tipPosition().getX() - direction.x, pointable.tipPosition().getY()
+            - direction.y, pointable.tipPosition().getZ() - direction.z);
 
-    return anklePos;
+    return convertVectorToPVector(anklePos);
   }
 
   /**
    * 
-   * @param finger
+   * @param pointable
    * @return
    */
-  public PVector getKnucklePVector(Finger finger) {
-    return convertVectorToPVector(getKnuckle(finger));
+  public PVector getVelocity(Pointable pointable) {
+    return convertVectorToPVector(pointable.tipVelocity());
+  }
+
+  public PVector getVelocity(Hand hand) {
+    return convertVectorToPVector(hand.palmVelocity());
+  }
+
+  /**
+   * 
+   * @param pointable
+   * @return
+   */
+  public PVector getDirection(Pointable pointable) {
+    return convertVectorToPVector(pointable.direction());
+  }
+
+  /**
+   * 
+   * @param pointable
+   * @return
+   */
+  public float getLength(Pointable pointable) {
+    return pointable.length();
+  }
+
+  /**
+   * 
+   * @param pointable
+   * @return
+   */
+  public float getWidth(Pointable pointable) {
+    return pointable.width();
   }
 
   /**
@@ -580,18 +595,13 @@ public class LeapMotionP5 {
    */
   public Pointable getPointable(int pointableNr) {
     if (!getPointableList().isEmpty()) {
-      lastDetectedPointable = getPointableList().get(pointableNr);
+      try {
+        lastDetectedPointable = getPointableList().get(pointableNr);
+      } catch (IndexOutOfBoundsException e) {
+        // ignore
+      }
     }
     return lastDetectedPointable;
-  }
-
-  /**
-   * 
-   * @param pointableNr
-   * @return
-   */
-  public PVector getPointableTipPVector(int pointableNr) {
-    return convertPointableToPVector(getPointable(pointableNr));
   }
 
   /**
@@ -673,18 +683,13 @@ public class LeapMotionP5 {
    */
   public Tool getTool(int toolNr) {
     if (!getToolList().isEmpty()) {
-      lastDetectedTool = getToolList().get(toolNr);
+      try {
+        lastDetectedTool = getToolList().get(toolNr);
+      } catch (IndexOutOfBoundsException e) {
+        // ignore
+      }
     }
     return lastDetectedTool;
-  }
-
-  /**
-   * 
-   * @param toolNr
-   * @return
-   */
-  public PVector getToolTipPVector(int toolNr) {
-    return convertToolToPVector(getTool(toolNr));
   }
 
   public Matrix getRotationsMatrix(Hand hand) {
