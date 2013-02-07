@@ -27,8 +27,8 @@ public class OneDollar {
    */
   public OneDollar(PApplet parent) {
 
-    System.out.println("# OneDollar-Unistroke-Recognizer - v" + OneDollar.getVersion()
-        + " - https://github.com/voidplus/OneDollar-Unistroke-Recognizer");
+    //System.out.println("# OneDollar-Unistroke-Recognizer - v" + OneDollar.getVersion()
+    //    + " - https://github.com/voidplus/OneDollar-Unistroke-Recognizer");
 
     parent.registerDispose(this);
     this.parent = parent;

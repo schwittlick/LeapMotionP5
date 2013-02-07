@@ -37,6 +37,7 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Matrix;
 import com.leapmotion.leap.Pointable;
 import com.leapmotion.leap.Tool;
+import com.leapmotion.leap.Vector;
 import com.onformative.leap.gestures.GestureHandler;
 
 /**
@@ -246,8 +247,11 @@ public class LeapMotionP5 {
    * @return
    */
   public PVector convertFingerToPVector(Finger finger) {
-    return convertToScreenDimension(finger.tipPosition().getX(), finger.tipPosition().getY(),
-        finger.tipPosition().getZ());
+    PVector fingerPos =
+        convertToScreenDimension(finger.tipPosition().getX(), finger.tipPosition().getY(), finger
+            .tipPosition().getZ());
+
+    return fingerPos;
   }
 
   /**
@@ -272,12 +276,21 @@ public class LeapMotionP5 {
 
   /**
    * 
-   * @param hand
+   * @param tool
    * @return
    */
   public PVector convertToolToPVector(Tool tool) {
     return convertToScreenDimension(tool.tipPosition().getX(), tool.tipPosition().getY(), tool
         .tipPosition().getZ());
+  }
+
+  /**
+   * 
+   * @param vector
+   * @return
+   */
+  public PVector convertVectorToPVector(Vector vector) {
+    return convertToScreenDimension(vector.getX(), vector.getY(), vector.getZ());
   }
 
   /**
@@ -359,7 +372,7 @@ public class LeapMotionP5 {
    * @param handNr
    * @return
    */
-  public PVector getHandPVector(int handNr) {
+  public PVector getHandPalmPVector(int handNr) {
     return convertHandToPVector(getHand(handNr));
   }
 
@@ -445,11 +458,53 @@ public class LeapMotionP5 {
     return lastDetectedFinger;
   }
 
-  public PVector getFingerPVector(int fingerNr) {
+  /**
+   * 
+   * @param fingerNr
+   * @return
+   */
+  public PVector getFingerTipPVector(int fingerNr) {
     return convertFingerToPVector(getFinger(fingerNr));
   }
 
+  /**
+   * 
+   * @param finger
+   * @return
+   */
+  public PVector getFingerTipPosition(Finger finger) {
+    return convertFingerToPVector(finger);
+  }
 
+  /**
+   * 
+   * @param finger
+   * @return
+   */
+  public Vector getKnuckle(Finger finger) {
+    Vector anklePos;
+
+    float length = finger.length();
+    PVector direction = new PVector();
+    direction.x = finger.direction().getX();
+    direction.y = finger.direction().getY();
+    direction.z = finger.direction().getZ();
+    direction.mult(length);
+    anklePos =
+        new Vector(finger.tipPosition().getX() - direction.x, finger.tipPosition().getY()
+            - direction.y, finger.tipPosition().getZ() - direction.z);
+
+    return anklePos;
+  }
+
+  /**
+   * 
+   * @param finger
+   * @return
+   */
+  public PVector getKnucklePVector(Finger finger) {
+    return convertVectorToPVector(getKnuckle(finger));
+  }
 
   /**
    * 
@@ -535,7 +590,7 @@ public class LeapMotionP5 {
    * @param pointableNr
    * @return
    */
-  public PVector getPointablePVector(int pointableNr) {
+  public PVector getPointableTipPVector(int pointableNr) {
     return convertPointableToPVector(getPointable(pointableNr));
   }
 
@@ -628,7 +683,7 @@ public class LeapMotionP5 {
    * @param toolNr
    * @return
    */
-  public PVector getToolPVector(int toolNr) {
+  public PVector getToolTipPVector(int toolNr) {
     return convertToolToPVector(getTool(toolNr));
   }
 
