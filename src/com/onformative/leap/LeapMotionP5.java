@@ -71,6 +71,8 @@ public class LeapMotionP5 {
   public GestureHandler gestures;
 
   /**
+   * TODO: methods to access fingers by type of finger (pointing finger, middlefinger, etc) check
+   * this: https://github.com/alexopalka/determineFingers
    * 
    * @param p
    */
@@ -94,16 +96,23 @@ public class LeapMotionP5 {
    * 
    */
   public void start() {
-    gestures.start();
+    try {
+      gestures.start();
+    } catch (Exception e) {
+      System.err.println("Gestures not initialized. Can not start gesture recognition.");
+    }
   }
 
   /**
    * 
    */
   public void stop() {
-    if (gestures != null) {
+    try {
       gestures.stop();
+    } catch (Exception e) {
+      System.err.println("Gestures not initialized. Can not stop gesture recognition.");
     }
+
     controller.removeListener(listener);
   }
 
@@ -112,7 +121,12 @@ public class LeapMotionP5 {
    * @param gestureName
    */
   public void addGesture(String gestureName) {
-    gestures.addGesture(gestureName);
+    try {
+      gestures.addGesture(gestureName);
+    } catch (Exception e) {
+      System.err.println("Gestures not initialized. Can not add gestures.");
+      System.err.println(e);
+    }
   }
 
   /**
@@ -120,7 +134,13 @@ public class LeapMotionP5 {
    * @return
    */
   public PApplet getParent() {
-    return p;
+    try {
+      return p;
+    } catch (Exception e) {
+      System.err.println("Can not return parent PApplet. Returning new PApplet object instead");
+      System.out.println(e);
+      return new PApplet();
+    }
   }
 
   /**
@@ -128,15 +148,25 @@ public class LeapMotionP5 {
    * @return
    */
   public Controller getController() {
-    return controller;
+    try {
+      return controller;
+    } catch (Exception e) {
+      System.err
+          .println("Can not return controller not initialized. Returning new Controller object");
+      System.out.println(e);
+      return new Controller();
+    }
   }
 
   /**
    * 
    */
   public void update() {
-    if (gestures != null) {
+    try {
       gestures.update();
+    } catch (Exception e) {
+      System.err.println("Can not update gesture recognition.");
+      System.err.println(e);
     }
   }
 
@@ -145,9 +175,11 @@ public class LeapMotionP5 {
    * @return
    */
   public Frame getFrame() {
-    if (currentFrame != null) {
+    try {
       return currentFrame;
-    } else {
+    } catch (Exception e) {
+      System.err.println("Can not return current frame. Returning new Frame object instead");
+      System.err.println(e);
       return new Frame();
     }
   }
@@ -157,7 +189,13 @@ public class LeapMotionP5 {
    * @return
    */
   public LinkedList<Frame> getFrames() {
-    return lastFrames;
+    try {
+      return lastFrames;
+    } catch (Exception e) {
+      System.err.println("Can not return list of last frames. Returning empty list instead.");
+      System.err.println(e);
+      return new LinkedList<Frame>();
+    }
   }
 
   /**
@@ -353,6 +391,11 @@ public class LeapMotionP5 {
    */
   public float getYaw(Hand hand) {
     return (float) Math.toRadians(hand.palmPosition().yaw());
+  }
+
+
+  public PVector getDirection(Hand hand) {
+    return convertVectorToPVector(hand.direction());
   }
 
 
