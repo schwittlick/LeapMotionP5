@@ -60,7 +60,7 @@ public void draw() {
   background(0);
   fill(255);
   for (Finger finger : leap.getFingerList()) {
-    PVector fingerPos = leap.convertFingerToPVector(finger);
+    PVector fingerPos = leap.getTip(finger);
     ellipse(fingerPos.x, fingerPos.y, 10, 10);
   }
 }
