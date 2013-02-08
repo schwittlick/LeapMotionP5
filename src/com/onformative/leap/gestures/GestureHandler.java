@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import processing.core.PApplet;
 
 import com.onformative.leap.LeapMotionP5;
+import com.onformative.leap.gestures.on.hands.OnHandEnter;
+import com.onformative.leap.gestures.on.hands.OnHandLeave;
 
 /**
  * GestureHandler.java
@@ -38,7 +40,7 @@ import com.onformative.leap.LeapMotionP5;
  * 
  */
 public class GestureHandler {
-  private ArrayList<Gesture> gestures;
+  public ArrayList<Gesture> gestures;
   public OneDollarGestures one;
   private final String callbackMethodName;
   private PApplet parent;
@@ -70,6 +72,8 @@ public class GestureHandler {
   public static final String PUSH = "push";
   public static final String PULL = "pull";
   public static final String VICTORY = "victory";
+  public static final String ON_HAND_ENTER = "onhandenter";
+  public static final String ON_HAND_LEAVE = "onhandleave";
 
 
   private int gestureTimeoutMillis = 150;
@@ -219,6 +223,10 @@ public class GestureHandler {
       gestures.add(new PullGesture(leap));
     } else if (gestureName.equals(VICTORY)) {
       gestures.add(new VictoryGesture(leap));
+    } else if (gestureName.equals(ON_HAND_ENTER)) {
+      gestures.add(new OnHandEnter(leap));
+    } else if (gestureName.equals(ON_HAND_LEAVE)) {
+      gestures.add(new OnHandLeave(leap));
     }
 
     if (gestureName.equals(CIRCLE)) {

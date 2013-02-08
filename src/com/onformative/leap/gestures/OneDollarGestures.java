@@ -186,6 +186,7 @@ public class OneDollarGestures extends Gesture {
     one.bind(gesture, callbackMethodName);
   }
 
+
   public void draw() {
     leap.getParent().pushStyle();
     leap.getParent().noFill();
