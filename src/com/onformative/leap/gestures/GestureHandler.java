@@ -94,14 +94,24 @@ public class GestureHandler {
    * 
    */
   public void start() {
-    one.start();
+    try {
+      one.start();
+    } catch (Exception e) {
+      System.err.println("Can not start gesture recognition. Ignored.");
+      System.err.println(e);
+    }
   }
 
   /**
    * 
    */
   public void stop() {
-    one.stop();
+    try {
+      one.stop();
+    } catch (Exception e) {
+      System.err.println("Can not stop gesture recognition. Ignored.");
+      System.err.println(e);
+    }
   }
 
   /**
@@ -109,7 +119,12 @@ public class GestureHandler {
    */
   public void update() {
     if (isBlocked()) {
-      one.update();
+      try {
+        one.update();
+      } catch (Exception e) {
+        System.err.println("Can not update gesture recognition. Ignored.");
+        System.err.println(e);
+      }
 
       // this triggeres the call of the callbackfunction in the main processing class.
       for (Gesture gesture : gestures) {
@@ -125,7 +140,6 @@ public class GestureHandler {
    * 
    */
   private void block() {
-    // blocked = true;
     millisStarted = leap.getParent().millis();
   }
 

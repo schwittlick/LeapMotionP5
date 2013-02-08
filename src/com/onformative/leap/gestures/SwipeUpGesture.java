@@ -24,8 +24,7 @@ package com.onformative.leap.gestures;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
-import com.leapmotion.leap.FingerList;
-import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Hand;
 import com.onformative.leap.LeapMotionP5;
 
@@ -35,8 +34,6 @@ import com.onformative.leap.LeapMotionP5;
  * 
  */
 public class SwipeUpGesture extends Gesture {
-  private boolean blockSwipeUp = false;
-  private int millisBlockSwipeUpStarted;
 
   public SwipeUpGesture(LeapMotionP5 leap) {
     super(leap);
@@ -49,21 +46,10 @@ public class SwipeUpGesture extends Gesture {
    * @return boolean returns true, if the gesture has been performed
    */
   public boolean check() {
-    Frame frame = leap.getFrame();
-    checkIfBlocked();
-
-    if (!blockSwipeUp) {
-      if (!frame.hands().empty()) {
-
-        // Get the first hand
-        Hand hand = frame.hands().get(0);
-        FingerList fingers = hand.fingers();
-        if (!fingers.empty()) {
-          if (fingers.get(0).tipVelocity().getY() > velocityThreshold) {
-            blockSwipeUp = true;
-            millisBlockSwipeUpStarted = leap.getParent().millis();
-            return true;
-          }
+    for (Hand hand : leap.getHandList()) {
+      for (Finger finger : leap.getFingerList(hand)) {
+        if (leap.getVelocity(finger).y < -velocityThreshold) {
+          return true;
         }
       }
     }
@@ -71,20 +57,10 @@ public class SwipeUpGesture extends Gesture {
   }
 
   /**
-   * Checks if the gesture is blocked. Returns true if the last time this gesture has been
-   * recognized is less than gestureTimeOutInMillis milliseconds ago
-   */
-  private void checkIfBlocked() {
-    if (leap.getParent().millis() - millisBlockSwipeUpStarted > gestureTimeoutInMillis) {
-      blockSwipeUp = false;
-    }
-  }
-
-  /**
    * 
    * @return
    */
-  public String getShortname(){
+  public String getShortname() {
     return "swipeup";
   }
 }

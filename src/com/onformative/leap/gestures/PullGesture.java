@@ -24,8 +24,7 @@ package com.onformative.leap.gestures;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
-import com.leapmotion.leap.FingerList;
-import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Hand;
 import com.onformative.leap.LeapMotionP5;
 
@@ -35,8 +34,6 @@ import com.onformative.leap.LeapMotionP5;
  * 
  */
 public class PullGesture extends Gesture {
-  private boolean blockPull = false;
-  private int millisBlockPullStarted;
 
   public PullGesture(LeapMotionP5 leap) {
     super(leap);
@@ -44,26 +41,17 @@ public class PullGesture extends Gesture {
   }
 
   /**
+   * 
+   * 
    * checks if the gesture has been performed
    * 
    * @return boolean returns true, if the gesture has been performed
    */
   public boolean check() {
-    Frame frame = leap.getFrame();
-    checkIfBlocked();
-
-    if (!blockPull) {
-      if (!frame.hands().empty()) {
-
-        // Get the first hand
-        Hand hand = frame.hands().get(0);
-        FingerList fingers = hand.fingers();
-        if (!fingers.empty()) {
-          if (fingers.get(0).tipVelocity().getZ() > velocityThreshold) {
-            blockPull = true;
-            millisBlockPullStarted = leap.getParent().millis();
-            return true;
-          }
+    for (Hand hand : leap.getHandList()) {
+      for (Finger finger : leap.getFingerList(hand)) {
+        if (leap.getVelocity(finger).z > velocityThreshold) {
+          return true;
         }
       }
     }
@@ -71,20 +59,10 @@ public class PullGesture extends Gesture {
   }
 
   /**
-   * Checks if the gesture is blocked. Returns true if the last time this gesture has been
-   * recognized is less than gestureTimeOutInMillis milliseconds ago
-   */
-  private void checkIfBlocked() {
-    if (leap.getParent().millis() - millisBlockPullStarted > gestureTimeoutInMillis) {
-      blockPull = false;
-    }
-  }
-
-  /**
    * 
    * @return
    */
-  public String getShortname(){
+  public String getShortname() {
     return "pull";
   }
 }

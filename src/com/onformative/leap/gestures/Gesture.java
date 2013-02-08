@@ -27,6 +27,8 @@ package com.onformative.leap.gestures;
 import com.onformative.leap.LeapMotionP5;
 
 /**
+ * TODO: check all gestures for all fingers. right now they are only implemented for the first and
+ * only finger
  * 
  * @author Marcel Schwittlick
  * 
@@ -37,6 +39,10 @@ public class Gesture {
   protected int gestureTimeoutInMillis = 100;
   protected float velocityThreshold = 1500;
 
+  /**
+   * 
+   * @param leap
+   */
   public Gesture(LeapMotionP5 leap) {
     this.leap = leap;
   }
@@ -68,12 +74,12 @@ public class Gesture {
   public void setGestureTimeoutMillis(int millis) {
     this.gestureTimeoutInMillis = millis;
   }
-  
+
   /**
    * 
    * @return
    */
-  public String getShortname(){
+  public String getShortname() {
     return "gesture";
   }
 }
