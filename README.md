@@ -12,10 +12,10 @@ Features
 
 LeapMotionP5(PApplet)
 
-void start()
-void stop()
-void update()
-void addGesture(String)
+void start()<br>
+void stop()<br>
+void update()<br>
+void addGesture(String)<br>
 
 Frame getFrame()
 Frame getLastFrame()
