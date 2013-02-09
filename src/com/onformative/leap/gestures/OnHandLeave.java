@@ -33,8 +33,8 @@ public class OnHandLeave extends Gesture {
   }
 
   public boolean check() {
-    int lastFrameHandCount = leap.getHandCount(leap.getLastFrame());
-    int currentFrameHandCount = leap.getHandCount(leap.getFrame());
+    int lastFrameHandCount = leap.getFingerList(leap.getLastFrame()).size();
+    int currentFrameHandCount = leap.getFingerList(leap.getFrame()).size();
     if (lastFrameHandCount > currentFrameHandCount) {
       return true;
     }

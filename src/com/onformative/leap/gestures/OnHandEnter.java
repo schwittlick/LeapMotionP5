@@ -24,7 +24,6 @@ package com.onformative.leap.gestures;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
-import com.leapmotion.leap.Frame;
 import com.onformative.leap.LeapMotionP5;
 
 public class OnHandEnter extends Gesture {
@@ -35,10 +34,8 @@ public class OnHandEnter extends Gesture {
   }
 
   public boolean check() {
-    Frame lastFrame = leap.getLastFrame();
-    Frame currentFrame = leap.getFrame();
-    int lastFrameHandCount = leap.getHandCount(lastFrame);
-    int currentFrameHandCount = leap.getHandCount(currentFrame);
+    int lastFrameHandCount = leap.getFingerList(leap.getLastFrame()).size();
+    int currentFrameHandCount = leap.getFingerList(leap.getFrame()).size();
     if (lastFrameHandCount < currentFrameHandCount) {
       return true;
     }
