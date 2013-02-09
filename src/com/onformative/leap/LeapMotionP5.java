@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 import com.leapmotion.leap.Controller;
@@ -68,6 +69,35 @@ public class LeapMotionP5 {
   private float LEAP_HEIGHT = 500.0f; // in mm
   private float LEAP_DEPTH = 200.0f; // in mm
 
+  public static final String CIRCLE = "circle";
+  public static final String TRIANGLE = "triangle";
+  public static final String RECTANGLE = "rectangle";
+  public static final String X = "x";
+  public static final String CHECK = "check";
+  public static final String CHARET = "charet";
+  public static final String ZIG_ZAG = "zig-zag";
+  public static final String ARROW = "arrow";
+  public static final String LEFT_SQUARE_BRACKET = "leftsquarebracket";
+  public static final String RIGHT_SQUARE_BRACKET = "rightsquarebracket";
+  public static final String LEFT_CURLY_BRACKET = "leftcurlybrace";
+  public static final String RIGHT_CURLY_BRACKET = "rightcurlybrace";
+  public static final String V = "v";
+  public static final String DELETE = "delete";
+  public static final String STAR = "star";
+  public static final String PIGTAIL = "pigtail";
+
+  public static final String SWIPE_LEFT = "swipeleft";
+  public static final String SWIPE_RIGHT = "swiperight";
+  public static final String SWIPE_UP = "swipeup";
+  public static final String SWIPE_DOWN = "swipedown";
+  public static final String PUSH = "push";
+  public static final String PULL = "pull";
+  public static final String ON_HAND_ENTER = "onhandenter";
+  public static final String ON_HAND_LEAVE = "onhandleave";
+
+  public static final String ON_FINGER_ENTER = "onfingerenter";
+  public static final String ON_FINGER_LEAVE = "onfingerleave";
+
   public GestureHandler gestures;
 
   /**
@@ -96,11 +126,7 @@ public class LeapMotionP5 {
    * 
    */
   public void start() {
-    try {
-      gestures.start();
-    } catch (Exception e) {
-      System.err.println("Gestures not initialized. Can not start gesture recognition.");
-    }
+    gestures.start();
   }
 
   /**
@@ -124,7 +150,7 @@ public class LeapMotionP5 {
     try {
       gestures.addGesture(gestureName);
     } catch (Exception e) {
-      System.err.println("Gestures not initialized. Can not add gestures.");
+      System.err.println("Can not add gestures.");
       System.err.println(e);
     }
   }
@@ -182,6 +208,10 @@ public class LeapMotionP5 {
       System.err.println(e);
       return new Frame();
     }
+  }
+
+  public Frame getLastFrame() {
+    return getFrames().get(getFrames().size() - 2);
   }
 
   /**
@@ -328,7 +358,9 @@ public class LeapMotionP5 {
     ArrayList<Hand> hands = new ArrayList<Hand>();
     if (frame.hands().empty() == false) {
       for (Hand hand : frame.hands()) {
-        hands.add(hand);
+        if (hand.isValid()) {
+          hands.add(hand);
+        }
       }
     }
     return hands;
@@ -372,7 +404,9 @@ public class LeapMotionP5 {
    * @return
    */
   public float getPitch(Hand hand) {
-    return (float) Math.toRadians(hand.palmPosition().pitch());
+    // return PApplet.map((float) Math.toDegrees(hand.direction().pitch()), 0, 22, 0,
+    // PConstants.TWO_PI);
+    return (float) Math.toDegrees(hand.direction().pitch());
   }
 
   /**
@@ -381,7 +415,8 @@ public class LeapMotionP5 {
    * @return
    */
   public float getRoll(Hand hand) {
-    return (float) Math.toRadians(hand.palmPosition().roll());
+    return -PApplet.map((float) Math.toDegrees(hand.direction().roll()), 0, 180, 0,
+        PConstants.TWO_PI);
   }
 
   /**
@@ -390,7 +425,7 @@ public class LeapMotionP5 {
    * @return
    */
   public float getYaw(Hand hand) {
-    return (float) Math.toRadians(hand.palmPosition().yaw());
+    return (float) Math.toDegrees(hand.direction().yaw());
   }
 
 
@@ -530,6 +565,7 @@ public class LeapMotionP5 {
    * @return
    */
   public PVector getVelocity(Pointable pointable) {
+    // return convertVectorToPVector(pointable.tipVelocity());
     return convertVectorToPVector(pointable.tipVelocity());
   }
 
