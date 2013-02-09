@@ -13,7 +13,6 @@ import com.onformative.leap.gestures.SwipeDownGesture;
 import com.onformative.leap.gestures.SwipeLeftGesture;
 import com.onformative.leap.gestures.SwipeRightGesture;
 import com.onformative.leap.gestures.SwipeUpGesture;
-import com.onformative.leap.gestures.VictoryGesture;
 
 import controlP5.ControlP5;
 
@@ -21,24 +20,24 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 public class GestureExample extends PApplet {
-LeapMotionP5 leap;
+  LeapMotionP5 leap;
 
   public void setup() {
     size(500, 500);
     leap = new LeapMotionP5(this);
 
-    
+
   }
 
 
   public void draw() {
     background(0);
     for (Finger finger : leap.getFingerList()) {
-      PVector fingerPos = leap.convertFingerToPVector(finger);
+      PVector fingerPos = leap.getTip(finger);
       ellipse(fingerPos.x, fingerPos.y, 10, 10);
     }
-    
-    if(check()){
+
+    if (check()) {
       System.out.println("hey");
     }
   }
