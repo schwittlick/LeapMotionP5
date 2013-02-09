@@ -364,22 +364,6 @@ public class LeapMotionP5 {
 
   /**
    * 
-   * @return int the number of currently tracked hands
-   */
-  public int getHandCount() {
-    return getHandList().size();
-  }
-
-  /**
-   * 
-   * @return int the number of currently tracked hands
-   */
-  public int getHandCount(Frame frame) {
-    return getHandList(frame).size();
-  }
-
-  /**
-   * 
    * @param handNr
    * @return
    */
@@ -433,6 +417,32 @@ public class LeapMotionP5 {
     return convertVectorToPVector(hand.direction());
   }
 
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public PVector getPosition(Hand hand) {
+    return convertVectorToPVector(hand.palmPosition());
+  }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public PVector getNormal(Hand hand) {
+    return convertVectorToPVector(hand.palmNormal());
+  }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public PVector getVelocity(Hand hand) {
+    return convertVectorToPVector(hand.palmVelocity());
+  }
 
   /**
    * 
@@ -470,22 +480,6 @@ public class LeapMotionP5 {
 
   /**
    * 
-   * @return
-   */
-  public int getFingerCount() {
-    return getFingerList().size();
-  }
-
-  /**
-   * 
-   * @return
-   */
-  public int getFingerCount(Frame frame) {
-    return getFingerList(frame).size();
-  }
-
-  /**
-   * 
    * @param hand
    * @return
    */
@@ -496,14 +490,6 @@ public class LeapMotionP5 {
       fingers.add(finger);
     }
     return fingers;
-  }
-
-  /**
-   * 
-   * @return
-   */
-  public int getFingerCount(Hand hand) {
-    return getFingerList(hand).size();
   }
 
   /**
@@ -535,23 +521,7 @@ public class LeapMotionP5 {
         pointable.tipPosition().getZ());
   }
 
-  /**
-   * 
-   * @param hand
-   * @return
-   */
-  public PVector getPosition(Hand hand) {
-    return convertVectorToPVector(hand.palmPosition());
-  }
 
-  /**
-   * 
-   * @param hand
-   * @return
-   */
-  public PVector getNormal(Hand hand) {
-    return convertVectorToPVector(hand.palmNormal());
-  }
 
   /**
    * 
@@ -584,14 +554,7 @@ public class LeapMotionP5 {
     return convertVectorToPVector(pointable.tipVelocity());
   }
 
-  /**
-   * 
-   * @param hand
-   * @return
-   */
-  public PVector getVelocity(Hand hand) {
-    return convertVectorToPVector(hand.palmVelocity());
-  }
+
 
   /**
    * 
@@ -653,22 +616,6 @@ public class LeapMotionP5 {
     return pointables;
   }
 
-  /**
-   * 
-   * @return int the number of currently tracked pointables
-   */
-  public int getPointableCount() {
-    return getPointableList().size();
-  }
-
-  /**
-   * 
-   * @return int the number of currently tracked pointables
-   */
-  public int getPointableCount(Frame frame) {
-    return getPointableList(frame).size();
-  }
-
   public ArrayList<Pointable> getPointableList(Hand hand) {
     ArrayList<Pointable> pointables = new ArrayList<Pointable>();
 
@@ -677,14 +624,6 @@ public class LeapMotionP5 {
     }
 
     return pointables;
-  }
-
-  /**
-   * 
-   * @return int the number of currently tracked pointables
-   */
-  public int getPointableCount(Hand hand) {
-    return getPointableList(hand).size();
   }
 
   /**
@@ -738,22 +677,6 @@ public class LeapMotionP5 {
 
   /**
    * 
-   * @return
-   */
-  public int getToolCount() {
-    return getToolList().size();
-  }
-
-  /**
-   * 
-   * @return
-   */
-  public int getToolCount(Frame frame) {
-    return getToolList(frame).size();
-  }
-
-  /**
-   * 
    * @param hand
    * @return
    */
@@ -765,14 +688,6 @@ public class LeapMotionP5 {
     }
 
     return tools;
-  }
-
-  /**
-   * 
-   * @return
-   */
-  public int getToolCount(Hand hand) {
-    return getToolList(hand).size();
   }
 
   /**
