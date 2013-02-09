@@ -41,7 +41,7 @@ Pointable getPointable(int)
 ArrayList<Tool> getToolList()
 ArrayList<Tool> getToolList(Frame)
 ArrayList<Tool> getToolList(Hand)
-Tool getFinger(int)
+Tool getTool(int)
 
 ArrayList<Finger> getFingerList()
 ArrayList<Finger> getFingerList(Frame)
