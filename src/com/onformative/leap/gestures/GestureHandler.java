@@ -1,6 +1,6 @@
 package com.onformative.leap.gestures;
 
-/*
+/**
  * LeapMotionP5
  * 
  * LeapMotionP5 library for Processing. Copyright (c) 2012-2013 held jointly by the individual

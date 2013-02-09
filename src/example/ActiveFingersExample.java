@@ -1,12 +1,9 @@
 package example;
 
 import com.leapmotion.leap.Finger;
-import com.leapmotion.leap.Hand;
-import com.leapmotion.leap.Tool;
 import com.onformative.leap.LeapMotionP5;
 
 import processing.core.PApplet;
-import processing.core.PVector;
 
 public class ActiveFingersExample extends PApplet {
   LeapMotionP5 leap;

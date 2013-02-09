@@ -35,7 +35,6 @@ import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
-import com.leapmotion.leap.Matrix;
 import com.leapmotion.leap.Pointable;
 import com.leapmotion.leap.Tool;
 import com.leapmotion.leap.Vector;
@@ -46,9 +45,6 @@ import com.onformative.leap.gestures.GestureHandler;
  * 
  * @author Marcel Schwittlick
  * @modified 04.02.2013
- * 
- *           the main class of the library. this class has to be instanciated in order to access
- *           leap data within processing
  * 
  */
 public class LeapMotionP5 {
@@ -428,7 +424,11 @@ public class LeapMotionP5 {
     return (float) Math.toDegrees(hand.direction().yaw());
   }
 
-
+  /**
+   * 
+   * @param hand
+   * @return
+   */
   public PVector getDirection(Hand hand) {
     return convertVectorToPVector(hand.direction());
   }
@@ -451,6 +451,11 @@ public class LeapMotionP5 {
     return fingers;
   }
 
+  /**
+   * 
+   * @param frame
+   * @return
+   */
   public ArrayList<Finger> getFingerList(Frame frame) {
     ArrayList<Finger> fingers = new ArrayList<Finger>();
 
@@ -530,10 +535,20 @@ public class LeapMotionP5 {
         pointable.tipPosition().getZ());
   }
 
+  /**
+   * 
+   * @param hand
+   * @return
+   */
   public PVector getPosition(Hand hand) {
     return convertVectorToPVector(hand.palmPosition());
   }
 
+  /**
+   * 
+   * @param hand
+   * @return
+   */
   public PVector getNormal(Hand hand) {
     return convertVectorToPVector(hand.palmNormal());
   }
@@ -569,6 +584,11 @@ public class LeapMotionP5 {
     return convertVectorToPVector(pointable.tipVelocity());
   }
 
+  /**
+   * 
+   * @param hand
+   * @return
+   */
   public PVector getVelocity(Hand hand) {
     return convertVectorToPVector(hand.palmVelocity());
   }
@@ -769,9 +789,5 @@ public class LeapMotionP5 {
       }
     }
     return lastDetectedTool;
-  }
-
-  public Matrix getRotationsMatrix(Hand hand) {
-    return hand.rotationMatrix(currentFrame);
   }
 }
