@@ -84,7 +84,13 @@ It's possible to use a vast variety of gestures with the leap motion in processi
 - push
 - pull
 
-####One finger drawing gestures:
+#### Other:
+- onHandEnter
+- onHandLeave
+- onFingerEnter
+- onFingerLeave
+
+#### One finger drawing gestures:
 - circle
 - triangle
 - rectangle
