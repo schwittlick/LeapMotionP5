@@ -61,6 +61,6 @@ public class SwipeUpGesture extends Gesture {
    * @return
    */
   public String getShortname() {
-    return "swipeup";
+    return LeapMotionP5.SWIPE_UP;
   }
 }

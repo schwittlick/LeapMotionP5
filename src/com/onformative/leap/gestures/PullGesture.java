@@ -63,6 +63,6 @@ public class PullGesture extends Gesture {
    * @return
    */
   public String getShortname() {
-    return "pull";
+    return LeapMotionP5.PULL;
   }
 }

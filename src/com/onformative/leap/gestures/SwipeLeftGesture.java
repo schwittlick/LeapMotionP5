@@ -63,6 +63,6 @@ public class SwipeLeftGesture extends Gesture {
    * @return
    */
   public String getShortname() {
-    return "swipeleft";
+    return LeapMotionP5.SWIPE_LEFT;
   }
 }

@@ -62,6 +62,6 @@ public class PushGesture extends Gesture {
    * @return
    */
   public String getShortname() {
-    return "push";
+    return LeapMotionP5.PUSH;
   }
 }
