@@ -1,4 +1,5 @@
 import com.onformative.leap.LeapMotionP5;
+import com.leapmotion.leap.Finger;
 
 LeapMotionP5 leap;
 
@@ -10,14 +11,13 @@ public void setup() {
 public void draw() {
   background(0);
   fill(255);
-  for (com.leapmotion.leap.Finger finger : leap.getActiveFingers()) {
-    ellipse(leap.leapToScreenX(finger.tipPosition().getX()), 
-    leap.leapToScreenY(finger.tipPosition().getY()), 10, 10);
+  for (Finger finger : leap.getFingerList()) {
+    PVector fingerPos = leap.getTip(finger);
+    ellipse(fingerPos.x, fingerPos.y, 10, 10);
   }
 }
 
 public void stop() {
   leap.stop();
-  super.stop();
 }
 

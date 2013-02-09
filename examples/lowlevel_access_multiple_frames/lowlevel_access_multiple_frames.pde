@@ -8,8 +8,11 @@ public void setup() {
 }
 
 public void draw() {
-  for (com.leapmotion.leap.Frame frame : leap.getFrames()) {
+  for (com.leapmotion.leap.Frame frame : leap.getFrames(200)) {
     // do something with the last 250 frames
   }
 }
 
+public void stop() {
+  leap.stop();
+}

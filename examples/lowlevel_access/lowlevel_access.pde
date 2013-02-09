@@ -8,8 +8,11 @@ public void setup() {
 }
 
 public void draw() {
-  com.leapmotion.leap.Frame frame = leap.getCurrentFrame();
+  com.leapmotion.leap.Frame frame = leap.getFrame();
   // do some processing of the frame
   // this is the same frame you'd get if you would use the callback
 }
 
+public void stop() {
+  leap.stop();
+}
