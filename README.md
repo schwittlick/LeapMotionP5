@@ -7,6 +7,71 @@ Just download the library archive at the bottom of this readme and extract it in
 
 Features
 ========
+
+<b>List of all available methods:</b>
+
+LeapMotionP5(PApplet)
+
+void start()
+void stop()
+void update()
+void addGesture(String)
+
+Frame getFrame()
+Frame getLastFrame()
+LinkedList<Frame> getFrames()
+LinkedList<Frame> getFrames(int)
+
+ArrayList<Hand> getHandList()
+ArrayList<Hand> getHandList(Frame)
+Hand getHand(int)
+float getPitch(Hand)
+float getRoll(Hand)
+float getYaw(Hand)
+PVector getDirection(Hand)
+PVector getVelocity(Hand)
+PVector getPosition(Hand)
+PVector getNormal(Hand)
+
+ArrayList<Pointable> getPointableList()
+ArrayList<Pointable> getPointableList(Frame)
+ArrayList<Pointable> getPointableList(Hand)
+Pointable getPointable(int)
+
+ArrayList<Tool> getToolList()
+ArrayList<Tool> getToolList(Frame)
+ArrayList<Tool> getToolList(Hand)
+Tool getFinger(int)
+
+ArrayList<Finger> getFingerList()
+ArrayList<Finger> getFingerList(Frame)
+ArrayList<Finger> getFingerList(Hand)
+Finger getFinger(int)
+
+PVector getTip(Pointable)
+PVector getTip(Tool)
+PVector getTip(Finger)
+
+PVector getOrigin(Pointable)
+PVector getOrigin(Tool)
+PVector getOrigin(Finger)
+
+PVector getVelocity(Pointable)
+PVector getVelocity(Tool)
+PVector getVelocity(Finger)
+
+PVector getDirection(Pointable)
+PVector getDirection(Tool)
+PVector getDirection(Finger)
+
+float getLength(Pointable)
+float getLength(Tool)
+float getLength(Finger)
+
+float getWidth(Pointable)
+float getWidth(Tool)
+float getWidth(Finger)
+
 <b>Gesture Recognition</b><br>
 It's possible to use a vast variety of gestures with the leap motion in processing.
 
