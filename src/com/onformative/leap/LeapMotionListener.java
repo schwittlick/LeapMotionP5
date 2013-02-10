@@ -24,7 +24,9 @@ package com.onformative.leap;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
@@ -41,7 +43,7 @@ import com.leapmotion.leap.Listener;
 class LeapMotionListener extends Listener {
   private LeapMotionP5 leap;
 
-  private int maxFrameCountToCheckForGestures = 250;
+  private int maxFrameCountToCheckForGestures = 1000;
 
   /**
    * 
@@ -52,6 +54,7 @@ class LeapMotionListener extends Listener {
     this.leap = leap;
     leap.currentFrame = new Frame();
     leap.lastFrames = new LinkedList<Frame>();
+    leap.lastFramesInclProperTimestamps = new ConcurrentSkipListMap<Date, Frame>();
   }
 
   public void onInit(Controller controller) {
@@ -79,9 +82,16 @@ class LeapMotionListener extends Listener {
     Frame frame = controller.frame();
     leap.currentFrame = frame;
 
+    //adding frames the list. making sure that only the newest frames are saved in order
     if (leap.lastFrames.size() >= maxFrameCountToCheckForGestures) {
       leap.lastFrames.removeFirst();
     }
     leap.lastFrames.add(frame);
+
+    // adding frames to the list. adding a proper timestamp to each frame object 
+    if (leap.lastFramesInclProperTimestamps.size() >= maxFrameCountToCheckForGestures) {
+      leap.lastFramesInclProperTimestamps.remove(leap.lastFramesInclProperTimestamps.firstKey());
+    }
+    leap.lastFramesInclProperTimestamps.put(new Date(), frame);
   }
 }

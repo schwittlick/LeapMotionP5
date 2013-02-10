@@ -25,7 +25,12 @@ package com.onformative.leap;
  */
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -53,6 +58,7 @@ public class LeapMotionP5 {
   private Controller controller;
 
   protected LinkedList<Frame> lastFrames;
+  protected ConcurrentSkipListMap<Date, Frame> lastFramesInclProperTimestamps;
 
   protected Frame currentFrame;
 
@@ -204,6 +210,21 @@ public class LeapMotionP5 {
       System.err.println(e);
       return new Frame();
     }
+  }
+
+  /**
+   * 
+   * @param id
+   * @return
+   */
+  public Frame getFrame(int id) {
+    Frame returnFrame = new Frame();
+    for (Frame frame : getFrames()) {
+      if (frame.id() >= id) {
+        returnFrame = frame;
+      }
+    }
+    return returnFrame;
   }
 
   public Frame getLastFrame() {
@@ -371,6 +392,22 @@ public class LeapMotionP5 {
     if (!getHandList().isEmpty()) {
       try {
         lastDetectedHand = getHandList().get(handNr);
+      } catch (IndexOutOfBoundsException e) {
+        // ignore
+      }
+    }
+    return lastDetectedHand;
+  }
+
+  /**
+   * 
+   * @param handNr
+   * @return
+   */
+  public Hand getHand(int handNr, Frame frame) {
+    if (!getHandList(frame).isEmpty()) {
+      try {
+        lastDetectedHand = getHandList(frame).get(handNr);
       } catch (IndexOutOfBoundsException e) {
         // ignore
       }
@@ -704,5 +741,69 @@ public class LeapMotionP5 {
       }
     }
     return lastDetectedTool;
+  }
+
+  public PVector getHandAcceleration() {
+    PVector acceleration;
+    try {
+      Frame currentFrame = getFrame();
+      Frame lastFrame = getLastFrame();
+
+      PVector currentVelo = getVelocity(getHand(0, currentFrame));
+      PVector lastVelo = getVelocity(getHand(0, lastFrame));
+      System.out.println("getHandAcceleration:");
+      System.out.println("currentV: " + currentVelo);
+      System.out.println("lastV   : " + lastVelo);
+      currentVelo.sub(lastVelo);
+      currentVelo.div(2);
+      acceleration = currentVelo;
+      System.out.println("acceleration: " + acceleration);
+
+    } catch (Exception e) {
+      System.err.println(e);
+      acceleration = new PVector();
+    }
+
+
+    return acceleration;
+  }
+
+  /*public PVector getAcceleration(Hand hand) {
+
+    PVector acceleration;
+    try {
+      Frame currentFrame = hand.frame();
+      Frame lastFrame = getFrame((int) (hand.frame().id() + 1));
+
+      System.out.println("getAcceleration(hand)");
+      PVector currentVelo = getVelocity(getHand(0, currentFrame));
+      PVector lastVelo = getVelocity(getHand(0, lastFrame));
+      System.out.println("currentV: " + currentVelo);
+      System.out.println("lastV   : " + lastVelo);
+      currentVelo.sub(lastVelo);
+      currentVelo.div(2);
+      acceleration = currentVelo;
+      System.out.println("acceleration: " + acceleration);
+
+    } catch (Exception e) {
+      System.err.println(e);
+      acceleration = new PVector();
+    }
+
+    return acceleration;
+  }*/
+
+  public Date getTimestamp(Frame frame) {
+    Set<Entry<Date, Frame>> lastFramesInclDates = lastFramesInclProperTimestamps.entrySet();
+    Iterator<Entry<Date, Frame>> i = lastFramesInclDates.iterator();
+    while(i.hasNext()){
+      Entry<Date, Frame> entry = i.next();
+      String stringOfTimestampInMap = entry.getValue().timestamp()+"";
+      String stringOfTimestampPassedParameter = frame.timestamp()+"";
+      if(stringOfTimestampInMap.equals(stringOfTimestampPassedParameter)){
+        return entry.getKey();
+      }
+    }
+    return new Date();
   }
 }
