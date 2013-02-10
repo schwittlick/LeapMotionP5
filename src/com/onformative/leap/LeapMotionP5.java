@@ -227,8 +227,26 @@ public class LeapMotionP5 {
     return returnFrame;
   }
 
+  /**
+   * 
+   * @return
+   */
   public Frame getLastFrame() {
     return getFrames().get(getFrames().size() - 2);
+  }
+
+  public Frame getFrameBeforeFrame(Frame frame) {
+    Frame frameBefore = null;
+    for (int i = 0; i < getFrames().size() - 1; i++) {
+      if (getFrames().get(i).equals(frame)) {
+        try {
+          frameBefore = getFrames().get(i - 1);
+        } catch (Exception e) {
+          // ignore
+        }
+      }
+    }
+    return frameBefore;
   }
 
   /**
@@ -373,12 +391,16 @@ public class LeapMotionP5 {
    */
   public ArrayList<Hand> getHandList(Frame frame) {
     ArrayList<Hand> hands = new ArrayList<Hand>();
-    if (frame.hands().empty() == false) {
-      for (Hand hand : frame.hands()) {
-        if (hand.isValid()) {
-          hands.add(hand);
+    try {
+      if (frame.hands().empty() == false) {
+        for (Hand hand : frame.hands()) {
+          if (hand.isValid()) {
+            hands.add(hand);
+          }
         }
       }
+    } catch (Exception e) {
+      // ignore
     }
     return hands;
   }
@@ -404,15 +426,20 @@ public class LeapMotionP5 {
    * @param handNr
    * @return
    */
-  public Hand getHand(int handNr, Frame frame) {
-    if (!getHandList(frame).isEmpty()) {
-      try {
-        lastDetectedHand = getHandList(frame).get(handNr);
-      } catch (IndexOutOfBoundsException e) {
-        // ignore
+  /*
+   * public Hand getHand(int handNr, Frame frame) { if (!getHandList(frame).isEmpty()) { try {
+   * lastDetectedHand = getHandList(frame).get(handNr); } catch (IndexOutOfBoundsException e) { //
+   * ignore } } return lastDetectedHand; }
+   */
+
+  public Hand getHandById(int id, Frame frame) {
+    Hand returnHand = null;
+    for (Hand hand : getHandList(frame)) {
+      if (hand.id() == id) {
+        returnHand = hand;
       }
     }
-    return lastDetectedHand;
+    return returnHand;
   }
 
   /**
@@ -479,6 +506,28 @@ public class LeapMotionP5 {
    */
   public PVector getVelocity(Hand hand) {
     return convertVectorToPVector(hand.palmVelocity());
+  }
+
+
+  public PVector getAcceleration(Hand hand) {
+    PVector acceleration = null;
+
+
+    Frame currentFrame = getFrame();
+    Frame lastFrame = getFrameBeforeFrame(currentFrame);
+    PVector currentVelo = new PVector();
+    PVector lastVelo = new PVector();
+    try {
+      currentVelo = getVelocity(hand);
+      lastVelo = getVelocity(getHandById(hand.id(), lastFrame));
+    } catch (Exception e) {
+      // ignore
+    }
+    currentVelo.sub(lastVelo);
+    currentVelo.div(2);
+    acceleration = currentVelo;
+
+    return acceleration;
   }
 
   /**
@@ -743,67 +792,35 @@ public class LeapMotionP5 {
     return lastDetectedTool;
   }
 
-  public PVector getHandAcceleration() {
-    PVector acceleration;
-    try {
-      Frame currentFrame = getFrame();
-      Frame lastFrame = getLastFrame();
-
-      PVector currentVelo = getVelocity(getHand(0, currentFrame));
-      PVector lastVelo = getVelocity(getHand(0, lastFrame));
-      System.out.println("getHandAcceleration:");
-      System.out.println("currentV: " + currentVelo);
-      System.out.println("lastV   : " + lastVelo);
-      currentVelo.sub(lastVelo);
-      currentVelo.div(2);
-      acceleration = currentVelo;
-      System.out.println("acceleration: " + acceleration);
-
-    } catch (Exception e) {
-      System.err.println(e);
-      acceleration = new PVector();
-    }
-
-
-    return acceleration;
-  }
-
-  /*public PVector getAcceleration(Hand hand) {
-
-    PVector acceleration;
-    try {
-      Frame currentFrame = hand.frame();
-      Frame lastFrame = getFrame((int) (hand.frame().id() + 1));
-
-      System.out.println("getAcceleration(hand)");
-      PVector currentVelo = getVelocity(getHand(0, currentFrame));
-      PVector lastVelo = getVelocity(getHand(0, lastFrame));
-      System.out.println("currentV: " + currentVelo);
-      System.out.println("lastV   : " + lastVelo);
-      currentVelo.sub(lastVelo);
-      currentVelo.div(2);
-      acceleration = currentVelo;
-      System.out.println("acceleration: " + acceleration);
-
-    } catch (Exception e) {
-      System.err.println(e);
-      acceleration = new PVector();
-    }
-
-    return acceleration;
-  }*/
+  /*
+   * public PVector getAcceleration(Hand hand) {
+   * 
+   * PVector acceleration; try { Frame currentFrame = hand.frame(); Frame lastFrame = getFrame((int)
+   * (hand.frame().id() + 1));
+   * 
+   * System.out.println("getAcceleration(hand)"); PVector currentVelo = getVelocity(getHand(0,
+   * currentFrame)); PVector lastVelo = getVelocity(getHand(0, lastFrame));
+   * System.out.println("currentV: " + currentVelo); System.out.println("lastV   : " + lastVelo);
+   * currentVelo.sub(lastVelo); currentVelo.div(2); acceleration = currentVelo;
+   * System.out.println("acceleration: " + acceleration);
+   * 
+   * } catch (Exception e) { System.err.println(e); acceleration = new PVector(); }
+   * 
+   * return acceleration; }
+   */
 
   public Date getTimestamp(Frame frame) {
+    Date date = null;
     Set<Entry<Date, Frame>> lastFramesInclDates = lastFramesInclProperTimestamps.entrySet();
     Iterator<Entry<Date, Frame>> i = lastFramesInclDates.iterator();
-    while(i.hasNext()){
+    while (i.hasNext()) {
       Entry<Date, Frame> entry = i.next();
-      String stringOfTimestampInMap = entry.getValue().timestamp()+"";
-      String stringOfTimestampPassedParameter = frame.timestamp()+"";
-      if(stringOfTimestampInMap.equals(stringOfTimestampPassedParameter)){
-        return entry.getKey();
+      String stringOfTimestampInMap = entry.getValue().timestamp() + "";
+      String stringOfTimestampPassedParameter = frame.timestamp() + "";
+      if (stringOfTimestampInMap.equals(stringOfTimestampPassedParameter)) {
+        date = entry.getKey();
       }
     }
-    return new Date();
+    return date;
   }
 }
