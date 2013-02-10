@@ -669,6 +669,27 @@ public class LeapMotionP5 {
     return pointable.width();
   }
 
+  public PVector getAcceleration(Pointable pointable) {
+
+    PVector acceleration = null;
+
+    Frame currentFrame = getFrame();
+    Frame lastFrame = getFrameBeforeFrame(currentFrame);
+    PVector currentVelo = new PVector();
+    PVector lastVelo = new PVector();
+    try {
+      currentVelo = getVelocity(pointable);
+      lastVelo = getVelocity(getPointableById(pointable.id(), lastFrame));
+    } catch (Exception e) {
+      // ignore
+    }
+    currentVelo.sub(lastVelo);
+    currentVelo.div(2);
+    acceleration = currentVelo;
+
+    return acceleration;
+  }
+
   /**
    * 
    * @return ArrayList<Pointable> an arraylist containing all currently tracked pointables
@@ -726,6 +747,16 @@ public class LeapMotionP5 {
       }
     }
     return lastDetectedPointable;
+  }
+
+  public Pointable getPointableById(int id, Frame frame) {
+    Pointable returnPointable = null;
+    for (Pointable pointable : getPointableList(frame)) {
+      if (pointable.id() == id) {
+        returnPointable = pointable;
+      }
+    }
+    return returnPointable;
   }
 
   /**
