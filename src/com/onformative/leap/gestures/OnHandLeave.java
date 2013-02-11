@@ -24,6 +24,7 @@ package com.onformative.leap.gestures;
  * obtaining this software and related tools. This software is subject to copyright.
  */
 
+import com.onformative.leap.LeapGestures;
 import com.onformative.leap.LeapMotionP5;
 
 public class OnHandLeave extends Gesture {
@@ -43,6 +44,6 @@ public class OnHandLeave extends Gesture {
   }
 
   public String getShortname() {
-    return LeapMotionP5.ON_HAND_LEAVE;
+    return LeapGestures.ON_HAND_LEAVE;
   }
 }

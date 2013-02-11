@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import processing.core.PApplet;
 
+import com.onformative.leap.LeapGestures;
 import com.onformative.leap.LeapMotionP5;
 
 /**
@@ -179,59 +180,59 @@ public class GestureHandler {
    */
   public void addGesture(String gestureName) {
 
-    if (gestureName.equals(LeapMotionP5.SWIPE_LEFT)) {
+    if (gestureName.equals(LeapGestures.SWIPE_LEFT)) {
       gestures.add(new SwipeLeftGesture(leap));
-    } else if (gestureName.equals(LeapMotionP5.SWIPE_RIGHT)) {
+    } else if (gestureName.equals(LeapGestures.SWIPE_RIGHT)) {
       gestures.add(new SwipeRightGesture(leap));
-    } else if (gestureName.equals(LeapMotionP5.SWIPE_UP)) {
+    } else if (gestureName.equals(LeapGestures.SWIPE_UP)) {
       gestures.add(new SwipeUpGesture(leap));
-    } else if (gestureName.equals(LeapMotionP5.SWIPE_DOWN)) {
+    } else if (gestureName.equals(LeapGestures.SWIPE_DOWN)) {
       gestures.add(new SwipeDownGesture(leap));
-    } else if (gestureName.equals(LeapMotionP5.PUSH)) {
+    } else if (gestureName.equals(LeapGestures.PUSH)) {
       gestures.add(new PushGesture(leap));
-    } else if (gestureName.equals(LeapMotionP5.PULL)) {
+    } else if (gestureName.equals(LeapGestures.PULL)) {
       gestures.add(new PullGesture(leap));
-    } else if (gestureName.equals(LeapMotionP5.ON_HAND_ENTER)) {
+    } else if (gestureName.equals(LeapGestures.ON_HAND_ENTER)) {
       gestures.add(new OnHandEnter(leap));
-    } else if (gestureName.equals(LeapMotionP5.ON_HAND_LEAVE)) {
+    } else if (gestureName.equals(LeapGestures.ON_HAND_LEAVE)) {
       gestures.add(new OnHandLeave(leap));
-    } else if (gestureName.equals(LeapMotionP5.ON_FINGER_ENTER)) {
+    } else if (gestureName.equals(LeapGestures.ON_FINGER_ENTER)) {
       gestures.add(new OnFingerEnter(leap));
-    } else if (gestureName.equals(LeapMotionP5.ON_FINGER_LEAVE)) {
+    } else if (gestureName.equals(LeapGestures.ON_FINGER_LEAVE)) {
       gestures.add(new OnFingerLeave(leap));
     }
 
-    if (gestureName.equals(LeapMotionP5.CIRCLE)) {
+    if (gestureName.equals(LeapGestures.CIRCLE)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.TRIANGLE)) {
+    } else if (gestureName.equals(LeapGestures.TRIANGLE)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.RECTANGLE)) {
+    } else if (gestureName.equals(LeapGestures.RECTANGLE)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.X)) {
+    } else if (gestureName.equals(LeapGestures.X)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.CHECK)) {
+    } else if (gestureName.equals(LeapGestures.CHECK)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.CHARET)) {
+    } else if (gestureName.equals(LeapGestures.CHARET)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.ZIG_ZAG)) {
+    } else if (gestureName.equals(LeapGestures.ZIG_ZAG)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.ARROW)) {
+    } else if (gestureName.equals(LeapGestures.ARROW)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.LEFT_SQUARE_BRACKET)) {
+    } else if (gestureName.equals(LeapGestures.LEFT_SQUARE_BRACKET)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.RIGHT_SQUARE_BRACKET)) {
+    } else if (gestureName.equals(LeapGestures.RIGHT_SQUARE_BRACKET)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.V)) {
+    } else if (gestureName.equals(LeapGestures.V)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.DELETE)) {
+    } else if (gestureName.equals(LeapGestures.DELETE)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.LEFT_CURLY_BRACKET)) {
+    } else if (gestureName.equals(LeapGestures.LEFT_CURLY_BRACKET)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.RIGHT_CURLY_BRACKET)) {
+    } else if (gestureName.equals(LeapGestures.RIGHT_CURLY_BRACKET)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.STAR)) {
+    } else if (gestureName.equals(LeapGestures.STAR)) {
       one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapMotionP5.PIGTAIL)) {
+    } else if (gestureName.equals(LeapGestures.PIGTAIL)) {
       one.addGesture(gestureName);
     }
   }

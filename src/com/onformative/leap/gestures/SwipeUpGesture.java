@@ -26,6 +26,7 @@ package com.onformative.leap.gestures;
 
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Hand;
+import com.onformative.leap.LeapGestures;
 import com.onformative.leap.LeapMotionP5;
 
 /**
@@ -61,6 +62,6 @@ public class SwipeUpGesture extends Gesture {
    * @return
    */
   public String getShortname() {
-    return LeapMotionP5.SWIPE_UP;
+    return LeapGestures.SWIPE_UP;
   }
 }
