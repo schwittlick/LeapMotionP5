@@ -145,6 +145,7 @@ public void stop() {
 #### Gesture Recognition
 <pre>
 import com.onformative.leap.LeapMotionP5;
+import com.onformative.leap.LeapGestures;
 
 LeapMotionP5 leap;
 String lastGesture = "";
@@ -155,32 +156,32 @@ public void setup() {
 
   leap = new LeapMotionP5(this);
   
-  leap.addGesture(leap.SWIPE_LEFT);
-  leap.addGesture(leap.SWIPE_RIGHT);
-  leap.addGesture(leap.SWIPE_UP);
-  leap.addGesture(leap.SWIPE_DOWN);
-  //leap.addGesture(leap.ON_HAND_ENTER);
-  //leap.addGesture(leap.ON_HAND_LEAVE);
-  //leap.addGesture(leap.ON_FINGER_ENTER);
-  //leap.addGesture(leap.ON_FINGER_LEAVE);
-  //leap.addGesture(leap.PUSH);
-  //leap.addGesture(leap.PULL);
-  leap.addGesture(leap.CIRCLE);
-  leap.addGesture(leap.TRIANGLE);
-  leap.addGesture(leap.RECTANGLE);
-  //leap.addGesture(leap.ZIG_ZAG);
-  //leap.addGesture(leap.X);
-  //leap.addGesture(leap.CHECK);
-  //leap.addGesture(leap.CHARET);
-  //leap.addGesture(leap.ARROW);
-  //leap.addGesture(leap.LEFT_CURLY_BRACKET);
-  //leap.addGesture(leap.RIGHT_CURLY_BRACKET);
-  //leap.addGesture(leap.LEFT_SQUARE_BRACKET);
-  //leap.addGesture(leap.RIGHT_SQUARE_BRACKET);
-  //leap.addGesture(leap.V);
-  //leap.addGesture(leap.DELETE);
-  //leap.addGesture(leap.STAR);
-  //leap.addGesture(leap.PIGTAIL);
+  leap.addGesture(LeapGestures.SWIPE_LEFT);
+  leap.addGesture(LeapGestures.SWIPE_RIGHT);
+  leap.addGesture(LeapGestures.SWIPE_UP);
+  leap.addGesture(LeapGestures.SWIPE_DOWN);
+  //leap.addGesture(LeapGestures.ON_HAND_ENTER);
+  //leap.addGesture(LeapGestures.ON_HAND_LEAVE);
+  //leap.addGesture(LeapGestures.ON_FINGER_ENTER);
+  //leap.addGesture(LeapGestures.ON_FINGER_LEAVE);
+  //leap.addGesture(LeapGestures.PUSH);
+  //leap.addGesture(LeapGestures.PULL);
+  leap.addGesture(LeapGestures.CIRCLE);
+  leap.addGesture(LeapGestures.TRIANGLE);
+  leap.addGesture(LeapGestures.RECTANGLE);
+  //leap.addGesture(LeapGestures.ZIG_ZAG);
+  //leap.addGesture(LeapGestures.X);
+  //leap.addGesture(LeapGestures.CHECK);
+  //leap.addGesture(LeapGestures.CHARET);
+  //leap.addGesture(LeapGestures.ARROW);
+  //leap.addGesture(LeapGestures.LEFT_CURLY_BRACKET);
+  //leap.addGesture(LeapGestures.RIGHT_CURLY_BRACKET);
+  //leap.addGesture(LeapGestures.LEFT_SQUARE_BRACKET);
+  //leap.addGesture(LeapGestures.RIGHT_SQUARE_BRACKET);
+  //leap.addGesture(LeapGestures.V);
+  //leap.addGesture(LeapGestures.DELETE);
+  //leap.addGesture(LeapGestures.STAR);
+  //leap.addGesture(LeapGestures.PIGTAIL);
   
   leap.start();
 }
