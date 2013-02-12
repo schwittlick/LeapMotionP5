@@ -30,7 +30,11 @@ import com.onformative.leap.LeapGestures;
 import com.onformative.leap.LeapMotionP5;
 
 /**
+ * SwipeDownGesture.java
+ * 
  * @author Marcel Schwittlick
+ * 
+ * This gesture is fired if the velocity of any finger attached to any hand is ahead a given 
  * 
  */
 public class SwipeDownGesture extends Gesture {

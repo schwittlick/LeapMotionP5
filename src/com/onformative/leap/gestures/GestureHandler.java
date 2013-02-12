@@ -48,6 +48,7 @@ public class GestureHandler {
   private int millisStarted;
 
   private int gestureTimeoutMillis = 200;
+  private float velocityThreshold = 1500;
 
   /**
    * 
@@ -139,9 +140,18 @@ public class GestureHandler {
    * @param threshold
    */
   public void setVelocityThreshold(float threshold) {
+    this.velocityThreshold = threshold;
     for (Gesture ges : gestures) {
       ges.setVelocityThreshold(threshold);
     }
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public float getVelocityThreshold() {
+    return this.velocityThreshold;
   }
 
   /**
@@ -155,6 +165,14 @@ public class GestureHandler {
     for (Gesture ges : gestures) {
       ges.setGestureTimeoutMillis(millis);
     }
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public int getGestureTimeoutMillis() {
+    return this.gestureTimeoutMillis;
   }
 
   /**

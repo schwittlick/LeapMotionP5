@@ -209,12 +209,20 @@ public class LeapMotionP5 {
   public Frame getFrameBeforeFrame(Frame frame) {
     Frame frameBefore = null;
     for (int i = 0; i < getFrames().size() - 1; i++) {
-      if (getFrames().get(i).equals(frame)) {
-        try {
-          frameBefore = getFrames().get(i - 1);
-        } catch (Exception e) {
-          // ignore
+      try {
+        if (getFrames().get(i).equals(frame)) {
+          try {
+
+            frameBefore = getFrames().get(i - 1);
+            if (frame.equals(frameBefore)) {
+              System.out.println("SAME FRAMEE");
+            }
+          } catch (Exception e) {
+            // ignore
+          }
         }
+      } catch (Exception e) {
+        frameBefore = frame;
       }
     }
     return frameBefore;

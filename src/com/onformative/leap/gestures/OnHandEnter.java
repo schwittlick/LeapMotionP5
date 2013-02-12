@@ -35,8 +35,8 @@ public class OnHandEnter extends Gesture {
   }
 
   public boolean check() {
-    int lastFrameHandCount = leap.getFingerList(leap.getLastFrame()).size();
-    int currentFrameHandCount = leap.getFingerList(leap.getFrame()).size();
+    int lastFrameHandCount = leap.getHandList(leap.getLastFrame()).size();
+    int currentFrameHandCount = leap.getHandList(leap.getFrame()).size();
     if (lastFrameHandCount < currentFrameHandCount) {
       return true;
     }
