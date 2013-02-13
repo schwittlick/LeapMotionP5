@@ -32,6 +32,7 @@ PVector getDirection(Hand)<br />
 PVector getVelocity(Hand)<br />
 PVector getPosition(Hand)<br />
 PVector getNormal(Hand)<br />
+PVector getAcceleration(Hand)<br />
 
 ArrayList<Pointable> getPointableList()<br />
 ArrayList<Pointable> getPointableList(Frame)<br />
@@ -59,6 +60,10 @@ PVector getOrigin(Finger)<br />
 PVector getVelocity(Pointable)<br />
 PVector getVelocity(Tool)<br />
 PVector getVelocity(Finger)<br />
+
+PVector getAcceleration(Pointable)<br />
+PVector getAcceleration(Tool)<br />
+PVector getAcceleration(Finger)<br />
 
 PVector getDirection(Pointable)<br />
 PVector getDirection(Tool)<br />
