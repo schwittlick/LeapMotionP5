@@ -26,6 +26,7 @@ package com.onformative.leap;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map.Entry;
@@ -62,10 +63,10 @@ public class LeapMotionP5 {
 
   protected Frame currentFrame;
 
-  protected Finger lastDetectedFinger;
-  protected Pointable lastDetectedPointable;
-  protected Hand lastDetectedHand;
-  protected Tool lastDetectedTool;
+  protected HashMap<Integer, Finger> lastDetectedFinger;
+  protected HashMap<Integer, Pointable> lastDetectedPointable;
+  protected HashMap<Integer, Hand> lastDetectedHand;
+  protected HashMap<Integer, Tool> lastDetectedTool;
 
   private float LEAP_WIDTH = 200.0f; // in mm
   private float LEAP_HEIGHT = 500.0f; // in mm
@@ -87,10 +88,15 @@ public class LeapMotionP5 {
 
     controller.addListener(listener);
 
-    lastDetectedFinger = new Finger();
-    lastDetectedPointable = new Pointable();
-    lastDetectedHand = new Hand();
-    lastDetectedTool = new Tool();
+    lastDetectedFinger = new HashMap<Integer, Finger>();
+    lastDetectedPointable = new HashMap<Integer, Pointable>();
+    lastDetectedHand = new HashMap<Integer, Hand>();
+    lastDetectedTool = new HashMap<Integer, Tool>();
+
+    lastDetectedFinger.put(0, new Finger());
+    lastDetectedPointable.put(0, new Pointable());
+    lastDetectedHand.put(0, new Hand());
+    lastDetectedTool.put(0, new Tool());
 
     gestures = new GestureHandler(p, this);
   }
@@ -390,14 +396,17 @@ public class LeapMotionP5 {
    * @return
    */
   public Hand getHand(int handNr) {
+    Hand returnHand = null;
     if (!getHandList().isEmpty()) {
-      try {
-        lastDetectedHand = getHandList().get(handNr);
-      } catch (IndexOutOfBoundsException e) {
-        // ignore
-      }
+      lastDetectedHand.put(handNr, getHandList().get(handNr));
     }
-    return lastDetectedHand;
+    returnHand = lastDetectedHand.get(handNr);
+    int downCounter = 0;
+    while (returnHand == null) {
+      returnHand = lastDetectedHand.get(handNr - downCounter);
+      downCounter++;
+    }
+    return returnHand;
   }
 
   /**
@@ -558,22 +567,22 @@ public class LeapMotionP5 {
   }
 
   /**
-   * accessing a finger by number. the number indicates the fingernumber. for example: when there
-   * are two fingers detected by the leap you can access the first one by getFinger(0) and the
-   * second one by getFinger(1). this is a comfortable way to quickly access the leap in processing
    * 
    * @param fingerNr
    * @return
    */
   public Finger getFinger(int fingerNr) {
+    Finger returnFinger = null;
     if (!getFingerList().isEmpty()) {
-      try {
-        lastDetectedFinger = getFingerList().get(fingerNr);
-      } catch (IndexOutOfBoundsException e) {
-        // ignore
-      }
+      lastDetectedFinger.put(fingerNr, getFingerList().get(fingerNr));
     }
-    return lastDetectedFinger;
+    returnFinger = lastDetectedFinger.get(fingerNr);
+    int downCounter = 0;
+    while (returnFinger == null) {
+      returnFinger = lastDetectedFinger.get(fingerNr - downCounter);
+      downCounter++;
+    }
+    return returnFinger;
   }
 
   /**
@@ -718,14 +727,17 @@ public class LeapMotionP5 {
    * @return
    */
   public Pointable getPointable(int pointableNr) {
+    Pointable returnPointable = null;
     if (!getPointableList().isEmpty()) {
-      try {
-        lastDetectedPointable = getPointableList().get(pointableNr);
-      } catch (IndexOutOfBoundsException e) {
-        // ignore
-      }
+      lastDetectedPointable.put(pointableNr, getPointableList().get(pointableNr));
     }
-    return lastDetectedPointable;
+    returnPointable = lastDetectedPointable.get(pointableNr);
+    int downCounter = 0;
+    while (returnPointable == null) {
+      returnPointable = lastDetectedPointable.get(pointableNr - downCounter);
+      downCounter++;
+    }
+    return returnPointable;
   }
 
   public Pointable getPointableById(int id, Frame frame) {
@@ -792,14 +804,17 @@ public class LeapMotionP5 {
    * @return
    */
   public Tool getTool(int toolNr) {
+    Tool returnTool = null;
     if (!getToolList().isEmpty()) {
-      try {
-        lastDetectedTool = getToolList().get(toolNr);
-      } catch (IndexOutOfBoundsException e) {
-        // ignore
-      }
+      lastDetectedTool.put(toolNr, getToolList().get(toolNr));
     }
-    return lastDetectedTool;
+    returnTool = lastDetectedTool.get(toolNr);
+    int downCounter = 0;
+    while (returnTool == null) {
+      returnTool = lastDetectedTool.get(toolNr - downCounter);
+      downCounter++;
+    }
+    return returnTool;
   }
 
   /*
