@@ -447,8 +447,9 @@ public class LeapMotionP5 {
    * @return
    */
   public float getRoll(Hand hand) {
-    return -PApplet.map((float) Math.toDegrees(hand.direction().roll()), 0, 180, 0,
-        PConstants.TWO_PI);
+    //return -PApplet.map((float) Math.toDegrees(hand.direction().roll()), 0, 180, 0,
+    //    PConstants.TWO_PI);
+    return (float) Math.toDegrees(hand.palmNormal().roll());
   }
 
   /**
