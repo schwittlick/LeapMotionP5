@@ -26,7 +26,9 @@ package com.onformative.leap;
 
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
@@ -55,6 +57,7 @@ class LeapMotionListener extends Listener {
     leap.currentFrame = new Frame();
     leap.lastFrames = new LinkedList<Frame>();
     leap.lastFramesInclProperTimestamps = new ConcurrentSkipListMap<Date, Frame>();
+    leap.oldFrames = new CopyOnWriteArrayList<Frame>();
   }
 
   public void onInit(Controller controller) {
@@ -93,5 +96,11 @@ class LeapMotionListener extends Listener {
       leap.lastFramesInclProperTimestamps.remove(leap.lastFramesInclProperTimestamps.firstKey());
     }
     leap.lastFramesInclProperTimestamps.put(new Date(), frame);
+    
+    //adding old frames to different object
+    if(leap.oldFrames.size() >= maxFrameCountToCheckForGestures){
+      leap.oldFrames.remove(0);
+    }
+    leap.oldFrames.add(frame);
   }
 }

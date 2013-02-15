@@ -32,9 +32,9 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PVector;
 
 import com.leapmotion.leap.Controller;
@@ -59,6 +59,7 @@ public class LeapMotionP5 {
   private Controller controller;
 
   protected LinkedList<Frame> lastFrames;
+  protected CopyOnWriteArrayList<Frame> oldFrames;
   protected ConcurrentSkipListMap<Date, Frame> lastFramesInclProperTimestamps;
 
   protected Frame currentFrame;
@@ -73,6 +74,8 @@ public class LeapMotionP5 {
   private float LEAP_DEPTH = 200.0f; // in mm
 
   public GestureHandler gestures;
+
+  private Finger testFinger;
 
   /**
    * TODO: methods to access fingers by type of finger (pointing finger, middlefinger, etc) check
@@ -99,6 +102,12 @@ public class LeapMotionP5 {
     lastDetectedTool.put(0, new Tool());
 
     gestures = new GestureHandler(p, this);
+
+    // this is neccessary because the velocity of all objects has an offset.
+    testFinger = new Finger();
+    System.out.println("pos offset: " + getTip(testFinger));
+    System.out.println("velo offset: " + getVelocity(testFinger));
+    System.out.println("acc offset: " + getAcceleration(testFinger));
   }
 
   /**
@@ -119,6 +128,14 @@ public class LeapMotionP5 {
     }
 
     controller.removeListener(listener);
+  }
+
+  public PVector velocityOffset() {
+    return convertVectorToPVector(testFinger.tipVelocity());
+  }
+
+  public PVector accelerationOffset() {
+    return getAcceleration(testFinger);
   }
 
   /**
@@ -212,25 +229,21 @@ public class LeapMotionP5 {
     return getFrames().get(getFrames().size() - 2);
   }
 
+  /**
+   * 
+   * @param frame
+   * @return
+   */
   public Frame getFrameBeforeFrame(Frame frame) {
     Frame frameBefore = null;
-    for (int i = 0; i < getFrames().size() - 1; i++) {
-      try {
-        if (getFrames().get(i).equals(frame)) {
-          try {
 
-            frameBefore = getFrames().get(i - 1);
-            if (frame.equals(frameBefore)) {
-              System.out.println("SAME FRAMEE");
-            }
-          } catch (Exception e) {
-            // ignore
-          }
-        }
-      } catch (Exception e) {
-        frameBefore = frame;
+    for (Frame of : getFrames()) {
+      if (of.id() == frame.id() - 1) {
+        frameBefore = of;
       }
     }
+
+
     return frameBefore;
   }
 
@@ -238,13 +251,13 @@ public class LeapMotionP5 {
    * 
    * @return
    */
-  public LinkedList<Frame> getFrames() {
+  public CopyOnWriteArrayList<Frame> getFrames() {
     try {
-      return lastFrames;
+      return oldFrames;
     } catch (Exception e) {
       System.err.println("Can not return list of last frames. Returning empty list instead.");
       System.err.println(e);
-      return new LinkedList<Frame>();
+      return new CopyOnWriteArrayList<Frame>();
     }
   }
 
@@ -400,7 +413,7 @@ public class LeapMotionP5 {
     if (!getHandList().isEmpty()) {
       lastDetectedHand.put(handNr, getHandList().get(handNr));
     }
-    returnHand = lastDetectedHand.get(handNr);
+    // returnHand = lastDetectedHand.get(handNr);
     int downCounter = 0;
     while (returnHand == null) {
       returnHand = lastDetectedHand.get(handNr - downCounter);
@@ -447,8 +460,8 @@ public class LeapMotionP5 {
    * @return
    */
   public float getRoll(Hand hand) {
-    //return -PApplet.map((float) Math.toDegrees(hand.direction().roll()), 0, 180, 0,
-    //    PConstants.TWO_PI);
+    // return -PApplet.map((float) Math.toDegrees(hand.direction().roll()), 0, 180, 0,
+    // PConstants.TWO_PI);
     return (float) Math.toDegrees(hand.palmNormal().roll());
   }
 
@@ -494,9 +507,10 @@ public class LeapMotionP5 {
    * @return
    */
   public PVector getVelocity(Hand hand) {
-    return convertVectorToPVector(hand.palmVelocity());
+    PVector velo = convertVectorToPVector(hand.palmVelocity());
+    velo.sub(velocityOffset());
+    return velo;
   }
-
 
   public PVector getAcceleration(Hand hand) {
     PVector acceleration = null;
@@ -574,10 +588,10 @@ public class LeapMotionP5 {
    */
   public Finger getFinger(int fingerNr) {
     Finger returnFinger = null;
-    if (!getFingerList().isEmpty()) {
+    if (getFingerList().size() > fingerNr) {
       lastDetectedFinger.put(fingerNr, getFingerList().get(fingerNr));
     }
-    returnFinger = lastDetectedFinger.get(fingerNr);
+    // returnFinger = lastDetectedFinger.get(fingerNr);
     int downCounter = 0;
     while (returnFinger == null) {
       returnFinger = lastDetectedFinger.get(fingerNr - downCounter);
@@ -625,8 +639,9 @@ public class LeapMotionP5 {
    * @return
    */
   public PVector getVelocity(Pointable pointable) {
-    // return convertVectorToPVector(pointable.tipVelocity());
-    return convertVectorToPVector(pointable.tipVelocity());
+    PVector velo = convertVectorToPVector(pointable.tipVelocity());
+    velo.sub(velocityOffset());
+    return velo;
   }
 
 
@@ -732,7 +747,7 @@ public class LeapMotionP5 {
     if (!getPointableList().isEmpty()) {
       lastDetectedPointable.put(pointableNr, getPointableList().get(pointableNr));
     }
-    returnPointable = lastDetectedPointable.get(pointableNr);
+    // returnPointable = lastDetectedPointable.get(pointableNr);
     int downCounter = 0;
     while (returnPointable == null) {
       returnPointable = lastDetectedPointable.get(pointableNr - downCounter);
@@ -809,7 +824,7 @@ public class LeapMotionP5 {
     if (!getToolList().isEmpty()) {
       lastDetectedTool.put(toolNr, getToolList().get(toolNr));
     }
-    returnTool = lastDetectedTool.get(toolNr);
+    // returnTool = lastDetectedTool.get(toolNr);
     int downCounter = 0;
     while (returnTool == null) {
       returnTool = lastDetectedTool.get(toolNr - downCounter);
