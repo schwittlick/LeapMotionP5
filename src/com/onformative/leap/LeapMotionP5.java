@@ -50,7 +50,7 @@ import com.onformative.leap.gestures.GestureHandler;
  * LeapMotionP5.java
  * 
  * @author Marcel Schwittlick
- * @modified 04.02.2013
+ * @modified 19.02.2013
  * 
  */
 public class LeapMotionP5 {
@@ -78,10 +78,11 @@ public class LeapMotionP5 {
   private Finger testFinger;
 
   /**
-   * TODO: methods to access fingers by type of finger (pointing finger, middlefinger, etc) check
-   * this: https://github.com/alexopalka/determineFingers
+   * this class gives you some high level access to the data tracked and recorded by the leap. it
+   * gives you a different way of access than the original leap sdk and transoforms all data into
+   * processing equivalent datatypes.
    * 
-   * @param p
+   * @param p PApplet the processing applet
    */
   public LeapMotionP5(PApplet p) {
     this.p = p;
@@ -130,17 +131,36 @@ public class LeapMotionP5 {
     controller.removeListener(listener);
   }
 
+  /**
+   * this returns a pvector containing the velocity offset. the problems the velocity offset has
+   * with it, is that the velocity is slightly shiftet. for example if you shouldnt have any
+   * velocity, because the finger is stanging still its returning a velocity that is initialized
+   * with a new Finger object. this should be fixed with the upcoming sdk releases (i hope) *
+   * 
+   * @return PVector containing the velocity offset
+   */
   public PVector velocityOffset() {
     return convertVectorToPVector(testFinger.tipVelocity());
   }
 
+  /**
+   * this retuns an pvector containing the acceleration offset, that has to be substracted from
+   * every vector returned from the library. unfortunately the leap sdk has a little bug there.
+   * 
+   * @return PVector containing the acceleration offset
+   */
   public PVector accelerationOffset() {
     return getAcceleration(testFinger);
   }
 
   /**
+   * this allows you to add a new gesture to the gesture recognition. only gestures that have been
+   * added in that way are going to be recognized. this is helpful if you only want to include
+   * certain gestures and want to ignore certain ones. adding only the gestures you want is
+   * important because certain gestures are recognized easier than other ones or are part of other
+   * gestures.
    * 
-   * @param gestureName
+   * @param gestureName the String of the gesture name. they are included in the LeapGestures class.
    */
   public void addGesture(String gestureName) {
     try {
@@ -152,8 +172,9 @@ public class LeapMotionP5 {
   }
 
   /**
+   * this returns the parent applet of the library - the processing applet.
    * 
-   * @return
+   * @return PApplet parent
    */
   public PApplet getParent() {
     try {
@@ -166,8 +187,9 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the controller of the leap sdk
    * 
-   * @return
+   * @return Controller controller
    */
   public Controller getController() {
     try {
@@ -181,7 +203,7 @@ public class LeapMotionP5 {
   }
 
   /**
-   * 
+   * this method only has to be called if you want to detect gestures
    */
   public void update() {
     try {
@@ -193,8 +215,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the most current frame from the leap sdk. a frame contains every tracked data from the
+   * leap about your fingers.
    * 
-   * @return
+   * @return Frame the leap frame
    */
   public Frame getFrame() {
     try {
@@ -207,9 +231,11 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns a frame by id.
    * 
-   * @param id
-   * @return
+   * @param id the id of the frame you want
+   * @return Frame the frame which id you passed as a parameter. if the frame with the id you asked
+   *         for is not currently saved anymore you'll get a new Frame object.
    */
   public Frame getFrame(int id) {
     Frame returnFrame = new Frame();
@@ -222,6 +248,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the frame before the most current frame.
    * 
    * @return
    */
@@ -230,9 +257,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the frame that was before the frame you passed.
    * 
    * @param frame
-   * @return
+   * @return the frame that was recorded right before the frame you passed.
    */
   public Frame getFrameBeforeFrame(Frame frame) {
     Frame frameBefore = null;
@@ -248,8 +276,9 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns a CopyOnWriteArrayList<Frame> containing all recently buffered frames.
    * 
-   * @return
+   * @return a CopyOnWriteArrayList containing the newest elements
    */
   public CopyOnWriteArrayList<Frame> getFrames() {
     try {
@@ -262,10 +291,10 @@ public class LeapMotionP5 {
   }
 
   /**
-   * the last entry in the linkedlist ist the newest frame and the first one is the oldest
+   * returns a linkedlist containing the last buffered frame
    * 
-   * @param frameCount
-   * @return
+   * @param frameCount the number of last frames
+   * @return a list containing all last frames
    */
   public LinkedList<Frame> getFrames(int frameCount) {
     LinkedList<Frame> frames = new LinkedList<Frame>();
@@ -290,8 +319,8 @@ public class LeapMotionP5 {
       Hand hand = frame.hands().get(0);
       if (hand.fingers().empty() == false) {
         Finger finger = hand.fingers().get(0);
-        fingerPositionXYPlane.x = leapToScreenX(finger.tipPosition().getX());
-        fingerPositionXYPlane.y = leapToScreenY(finger.tipPosition().getY());
+        fingerPositionXYPlane.x = transformLeapToScreenX(finger.tipPosition().getX());
+        fingerPositionXYPlane.y = transformLeapToScreenY(finger.tipPosition().getY());
       }
     }
 
@@ -299,11 +328,12 @@ public class LeapMotionP5 {
   }
 
   /**
+   * converts the x coordinate from the leap space into the processing window space
    * 
-   * @param x
-   * @return
+   * @param x leap-space
+   * @return processing-window space
    */
-  public float leapToScreenX(float x) {
+  public float transformLeapToScreenX(float x) {
     /*
      * int startX = -243; int endX = 256; float valueMapped = PApplet.map(x, startX, endX, 0,
      * p.width); return valueMapped;
@@ -317,11 +347,12 @@ public class LeapMotionP5 {
   }
 
   /**
+   * converts the y coordinate from the leap space into the processing window space
    * 
-   * @param y
-   * @return
+   * @param y leap space
+   * @return processing-window space
    */
-  public float leapToScreenY(float y) {
+  public float transformLeapToScreenY(float y) {
     /*
      * int startY = 50; int endY = 350; float valueMapped = PApplet.map(y, startY, endY, 0,
      * p.height); return valueMapped;
@@ -330,11 +361,12 @@ public class LeapMotionP5 {
   }
 
   /**
+   * converts the z coordinate from the leap space into the processing window space
    * 
-   * @param z
-   * @return
+   * @param z leap space
+   * @return processing window space
    */
-  public float leapToScreenZ(float z) {
+  public float transformLeapToScreenZ(float z) {
     /*
      * int startZ = -51; int endZ = 149; float valueMapped = PApplet.map(z, startZ, endZ, 0,
      * p.width); return valueMapped;
@@ -343,12 +375,13 @@ public class LeapMotionP5 {
   }
 
   /**
+   * converts a vector from the leap space into the processing window space
    * 
-   * @param vector
-   * @return
+   * @param vector from the leap sdk containing a position in the leap space
+   * @return the vector in PVector data type containing the same position in processing window space
    */
   public PVector convertVectorToPVector(Vector vector) {
-    return convertToScreenDimension(vector.getX(), vector.getY(), vector.getZ());
+    return convertLeapToScreenDimension(vector.getX(), vector.getY(), vector.getZ());
   }
 
   /**
@@ -360,15 +393,16 @@ public class LeapMotionP5 {
    * @return PVector the pvector of the point you passed in converted to the dimensions of your
    *         processing sketch window
    */
-  public PVector convertToScreenDimension(float x, float y, float z) {
+  public PVector convertLeapToScreenDimension(float x, float y, float z) {
     PVector positionRelativeToFrame = new PVector();
-    positionRelativeToFrame.x = leapToScreenX(x);
-    positionRelativeToFrame.y = leapToScreenY(y);
-    positionRelativeToFrame.z = leapToScreenZ(z);
+    positionRelativeToFrame.x = transformLeapToScreenX(x);
+    positionRelativeToFrame.y = transformLeapToScreenY(y);
+    positionRelativeToFrame.z = transformLeapToScreenZ(z);
     return positionRelativeToFrame;
   }
 
   /**
+   * returns an arraylist containing all currently tracked hands
    * 
    * @return ArrayList<Hand> an arraylist containing all currently tracked hands
    */
@@ -384,8 +418,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns all hands tracked in the frame you passed
    * 
-   * @return ArrayList<Hand> an arraylist containing all currently tracked hands
+   * @param frame the frame from which to find out all tracked hands
+   * @return arraylist containing all hands from the passed frame
    */
   public ArrayList<Hand> getHandList(Frame frame) {
     ArrayList<Hand> hands = new ArrayList<Hand>();
@@ -404,8 +440,12 @@ public class LeapMotionP5 {
   }
 
   /**
+   * gets a hand by number. the number is indicated by the order the hand appeared in the leap. so
+   * the first hand tracked has the nr 0 and the second one the number 1. once one hand of them two
+   * leaves the leap the one hand left has the nr 0. this is implemented like that because the leap
+   * is loosing track of the id's of hand to easily.
    * 
-   * @param handNr
+   * @param handNr nr of the hand
    * @return
    */
   public Hand getHand(int handNr) {
@@ -423,16 +463,12 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns a hand by id in the frame you passed.
    * 
-   * @param handNr
+   * @param id
+   * @param frame
    * @return
    */
-  /*
-   * public Hand getHand(int handNr, Frame frame) { if (!getHandList(frame).isEmpty()) { try {
-   * lastDetectedHand = getHandList(frame).get(handNr); } catch (IndexOutOfBoundsException e) { //
-   * ignore } } return lastDetectedHand; }
-   */
-
   public Hand getHandById(int id, Frame frame) {
     Hand returnHand = null;
     for (Hand hand : getHandList(frame)) {
@@ -444,9 +480,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the pitch of the hand you passed
    * 
-   * @param hand
-   * @return
+   * @param hand the hand you want the pitch of
+   * @return a float value containing the pitch of the hand
    */
   public float getPitch(Hand hand) {
     // return PApplet.map((float) Math.toDegrees(hand.direction().pitch()), 0, 22, 0,
@@ -455,9 +492,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the roll of the hand you passed
    * 
-   * @param hand
-   * @return
+   * @param hand the hand you want the roll of
+   * @return a float value containing the roll of the hand
    */
   public float getRoll(Hand hand) {
     // return -PApplet.map((float) Math.toDegrees(hand.direction().roll()), 0, 180, 0,
@@ -466,45 +504,50 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the yaw of the hand you passed
    * 
-   * @param hand
-   * @return
+   * @param hand the hand you want the yaw of
+   * @return a float value containing the yaw of the hand
    */
   public float getYaw(Hand hand) {
     return (float) Math.toDegrees(hand.direction().yaw());
   }
 
   /**
+   * returns a PVector containing the direction of the hand
    * 
-   * @param hand
-   * @return
+   * @param hand the hand you want the direction of
+   * @return PVector direction of the hand
    */
   public PVector getDirection(Hand hand) {
     return convertVectorToPVector(hand.direction());
   }
 
   /**
+   * returns a PVector containing the position of the hand
    * 
-   * @param hand
-   * @return
+   * @param hand the hand you want the position of
+   * @return PVector position of the hand
    */
   public PVector getPosition(Hand hand) {
     return convertVectorToPVector(hand.palmPosition());
   }
 
   /**
+   * retrusn the normal of the palm of the hand
    * 
-   * @param hand
-   * @return
+   * @param hand the hand you want the normal of the handpalm of
+   * @return a PVector containing the normal of thepalm of the hand
    */
   public PVector getNormal(Hand hand) {
     return convertVectorToPVector(hand.palmNormal());
   }
 
   /**
+   * returns the velocity of the palm of the hand you passed in
    * 
-   * @param hand
-   * @return
+   * @param hand the hand of which palm you want the velocity of
+   * @return a PVector containing the velocity of the hand
    */
   public PVector getVelocity(Hand hand) {
     PVector velo = convertVectorToPVector(hand.palmVelocity());
@@ -512,9 +555,14 @@ public class LeapMotionP5 {
     return velo;
   }
 
+  /**
+   * access to the acceleration of the hand you passed in.
+   * 
+   * @param hand the hand you want the acceleration of
+   * @return a PVector containing the acceleration of the hand you passed in
+   */
   public PVector getAcceleration(Hand hand) {
     PVector acceleration = null;
-
 
     Frame currentFrame = getFrame();
     Frame lastFrame = getFrameBeforeFrame(currentFrame);
@@ -534,6 +582,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * access to all fingers that are currently tracked
    * 
    * @return ArrayList<Finger> an arraylist containing all currently tracked fingers
    */
@@ -551,9 +600,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * access to all tracked fingers in the frame you passed in
    * 
-   * @param frame
-   * @return
+   * @param frame the frame you want all tracked fingers of
+   * @return an arraylist containing all tracked fingers
    */
   public ArrayList<Finger> getFingerList(Frame frame) {
     ArrayList<Finger> fingers = new ArrayList<Finger>();
@@ -568,9 +618,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * access to all fingers of the hand you passed in
    * 
-   * @param hand
-   * @return
+   * @param hand the hand you want all tracked fingers of
+   * @return an arraylist containing all tracked fingers of the hand
    */
   public ArrayList<Finger> getFingerList(Hand hand) {
     ArrayList<Finger> fingers = new ArrayList<Finger>();
@@ -582,6 +633,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the finger by number. the fingers are numbered by the occurence in the leap.
    * 
    * @param fingerNr
    * @return
@@ -601,21 +653,24 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the tip position of the passed pointable
    * 
-   * @param pointable
-   * @return
+   * @param pointable the pointable you want the tippoisition of
+   * @return a PVector containing the position of the tip of the pointable
    */
   public PVector getTip(Pointable pointable) {
-    return convertToScreenDimension(pointable.tipPosition().getX(), pointable.tipPosition().getY(),
-        pointable.tipPosition().getZ());
+    return convertLeapToScreenDimension(pointable.tipPosition().getX(), pointable.tipPosition()
+        .getY(), pointable.tipPosition().getZ());
   }
 
 
 
   /**
+   * returns the origin of the pointable. the origin is the place where the pointable leaves the
+   * body of the hand.
    * 
-   * @param pointable
-   * @return
+   * @param pointable the pointable you want the origin of
+   * @return a PVector containing the position of the origin of the passed pointable
    */
   public PVector getOrigin(Pointable pointable) {
     Vector anklePos;
@@ -634,9 +689,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns the velocity of the pointbale
    * 
-   * @param pointable
-   * @return
+   * @param pointable the pointable you want the velocity of
+   * @return a PVector containing the velocity of the tip of the pointble
    */
   public PVector getVelocity(Pointable pointable) {
     PVector velo = convertVectorToPVector(pointable.tipVelocity());
@@ -647,15 +703,17 @@ public class LeapMotionP5 {
 
 
   /**
+   * calculates the direction of the passed pointable
    * 
-   * @param pointable
-   * @return
+   * @param pointable the pointable you want the direction of
+   * @return a PVector containing the direction of the pointable
    */
   public PVector getDirection(Pointable pointable) {
     return convertVectorToPVector(pointable.direction());
   }
 
   /**
+   * passes the length of a pointable though.
    * 
    * @param pointable
    * @return
@@ -665,6 +723,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * passes the width of a pointable through
    * 
    * @param pointable
    * @return
@@ -673,6 +732,13 @@ public class LeapMotionP5 {
     return pointable.width();
   }
 
+  /**
+   * calculates the acceleration of the pointable according to the velocity of the curent and the
+   * last frame
+   * 
+   * @param pointable the pointable you want the acceleration of
+   * @return a PVector containing the acceleration of the tip of the passed pointable
+   */
   public PVector getAcceleration(Pointable pointable) {
 
     PVector acceleration = null;
@@ -695,6 +761,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns all pointables in the current frame
    * 
    * @return ArrayList<Pointable> an arraylist containing all currently tracked pointables
    */
@@ -712,6 +779,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns all pointables of the passed framre
    * 
    * @return ArrayList<Pointable> an arraylist containing all currently tracked pointables
    */
@@ -727,6 +795,12 @@ public class LeapMotionP5 {
     return pointables;
   }
 
+  /**
+   * returns all pointables of the passed hand
+   * 
+   * @param hand the hand you want the pointables of
+   * @return an arraylist containing the pointables of the passed hand
+   */
   public ArrayList<Pointable> getPointableList(Hand hand) {
     ArrayList<Pointable> pointables = new ArrayList<Pointable>();
 
@@ -738,8 +812,10 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns a pointable by its number. look up to the equivalent methods for hand/finger for
+   * documentation
    * 
-   * @param pointableNr
+   * @param pointableNr the number of the pointable
    * @return
    */
   public Pointable getPointable(int pointableNr) {
@@ -756,6 +832,13 @@ public class LeapMotionP5 {
     return returnPointable;
   }
 
+  /**
+   * returns a pointable by id in the passed frame
+   * 
+   * @param id the if of the pointbale
+   * @param frame the frame where to look for the pointable
+   * @return
+   */
   public Pointable getPointableById(int id, Frame frame) {
     Pointable returnPointable = null;
     for (Pointable pointable : getPointableList(frame)) {
@@ -767,6 +850,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * calculates an arraylist containing all tools in the current frame
    * 
    * @return
    */
@@ -784,6 +868,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * calculates an arraylist containing all tools in the passed frame
    * 
    * @return
    */
@@ -800,6 +885,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns a arraylist of tools attached to the passed hand
    * 
    * @param hand
    * @return
@@ -815,6 +901,7 @@ public class LeapMotionP5 {
   }
 
   /**
+   * returns a tool by its number
    * 
    * @param toolNr
    * @return
@@ -833,23 +920,12 @@ public class LeapMotionP5 {
     return returnTool;
   }
 
-  /*
-   * public PVector getAcceleration(Hand hand) {
+  /**
+   * calculates a proper timestamp of the passed frame
    * 
-   * PVector acceleration; try { Frame currentFrame = hand.frame(); Frame lastFrame = getFrame((int)
-   * (hand.frame().id() + 1));
-   * 
-   * System.out.println("getAcceleration(hand)"); PVector currentVelo = getVelocity(getHand(0,
-   * currentFrame)); PVector lastVelo = getVelocity(getHand(0, lastFrame));
-   * System.out.println("currentV: " + currentVelo); System.out.println("lastV   : " + lastVelo);
-   * currentVelo.sub(lastVelo); currentVelo.div(2); acceleration = currentVelo;
-   * System.out.println("acceleration: " + acceleration);
-   * 
-   * } catch (Exception e) { System.err.println(e); acceleration = new PVector(); }
-   * 
-   * return acceleration; }
+   * @param frame the frame you want the timestamp of
+   * @return Date containing the timestamp when the frame was taken
    */
-
   public Date getTimestamp(Frame frame) {
     Date date = null;
     Set<Entry<Date, Frame>> lastFramesInclDates = lastFramesInclProperTimestamps.entrySet();

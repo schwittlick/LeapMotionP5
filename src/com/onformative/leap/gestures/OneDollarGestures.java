@@ -203,7 +203,7 @@ public class OneDollarGestures extends Gesture {
       if (fingers.empty() == false) {
         com.leapmotion.leap.Finger finger = fingers.get(0);
         Vector position = finger.tipPosition();
-        one.update(100, leap.leapToScreenX(position.getX()), leap.leapToScreenY(position.getY()));
+        one.update(100, leap.transformLeapToScreenX(position.getX()), leap.transformLeapToScreenY(position.getY()));
       }
     }
     one.check(); // run the gesture detection
