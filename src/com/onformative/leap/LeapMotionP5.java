@@ -653,6 +653,22 @@ public class LeapMotionP5 {
   }
 
   /**
+   * 
+   * @param id
+   * @param frame
+   * @return
+   */
+  public Finger getFingerById(int id, Frame frame) {
+    Finger returnFinger = null;
+    for (Finger finger : getFingerList(frame)) {
+      if (finger.id() == id) {
+        returnFinger = finger;
+      }
+    }
+    return returnFinger;
+  }
+
+  /**
    * returns the tip position of the passed pointable
    * 
    * @param pointable the pointable you want the tippoisition of
