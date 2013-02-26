@@ -40,6 +40,7 @@ import processing.core.PVector;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Gesture.Type;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Pointable;
 import com.leapmotion.leap.Tool;
@@ -111,23 +112,15 @@ public class LeapMotionP5 {
     System.out.println("acc offset: " + getAcceleration(testFinger));
   }
 
-  /**
-   * 
-   */
-  public void start() {
-    gestures.start();
+  public String getSDKVersion() {
+    // return controller.
+    return "0.7.4";
   }
 
   /**
    * 
    */
   public void stop() {
-    try {
-      gestures.stop();
-    } catch (Exception e) {
-      System.err.println("Gestures not initialized. Can not stop gesture recognition.");
-    }
-
     controller.removeListener(listener);
   }
 
@@ -153,22 +146,16 @@ public class LeapMotionP5 {
     return getAcceleration(testFinger);
   }
 
-  /**
-   * this allows you to add a new gesture to the gesture recognition. only gestures that have been
-   * added in that way are going to be recognized. this is helpful if you only want to include
-   * certain gestures and want to ignore certain ones. adding only the gestures you want is
-   * important because certain gestures are recognized easier than other ones or are part of other
-   * gestures.
-   * 
-   * @param gestureName the String of the gesture name. they are included in the LeapGestures class.
-   */
-  public void addGesture(String gestureName) {
-    try {
-      gestures.addGesture(gestureName);
-    } catch (Exception e) {
-      System.err.println("Can not add gestures.");
-      System.err.println(e);
-    }
+  public void enableGesture(Type gestureName) {
+    controller.enableGesture(gestureName);
+  }
+
+  public void disableGesture(Type gesture) {
+    controller.enableGesture(gesture, false);
+  }
+
+  public boolean isEnabled(Type gesture) {
+    return controller.isGestureEnabled(gesture);
   }
 
   /**
@@ -177,13 +164,7 @@ public class LeapMotionP5 {
    * @return PApplet parent
    */
   public PApplet getParent() {
-    try {
-      return p;
-    } catch (Exception e) {
-      System.err.println("Can not return parent PApplet. Returning new PApplet object instead");
-      System.out.println(e);
-      return new PApplet();
-    }
+    return p;
   }
 
   /**
@@ -199,18 +180,6 @@ public class LeapMotionP5 {
           .println("Can not return controller not initialized. Returning new Controller object");
       System.out.println(e);
       return new Controller();
-    }
-  }
-
-  /**
-   * this method only has to be called if you want to detect gestures
-   */
-  public void update() {
-    try {
-      gestures.update();
-    } catch (Exception e) {
-      System.err.println("Can not update gesture recognition.");
-      System.err.println(e);
     }
   }
 

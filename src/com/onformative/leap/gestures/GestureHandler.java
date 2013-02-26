@@ -40,7 +40,6 @@ import com.onformative.leap.LeapMotionP5;
  */
 public class GestureHandler {
   public ArrayList<Gesture> gestures;
-  public OneDollarGestures one;
   private final String callbackMethodName;
   private PApplet parent;
   private LeapMotionP5 leap;
@@ -60,56 +59,9 @@ public class GestureHandler {
     this.leap = leap;
 
     gestures = new ArrayList<Gesture>();
-    one = new OneDollarGestures(parent, leap);
 
     callbackMethodName = "gestureRecognized";
     millisStarted = parent.millis();
-  }
-
-  /**
-   * 
-   */
-  public void start() {
-    try {
-      one.start();
-    } catch (Exception e) {
-      System.err.println("Can not start gesture recognition. Ignored.");
-      System.err.println(e);
-    }
-  }
-
-  /**
-   * 
-   */
-  public void stop() {
-    try {
-      one.stop();
-    } catch (Exception e) {
-      System.err.println("Can not stop gesture recognition. Ignored.");
-      System.err.println(e);
-    }
-  }
-
-  /**
-   * 
-   */
-  public void update() {
-    if (isBlocked()) {
-      try {
-        one.update();
-      } catch (Exception e) {
-        System.err.println("Can not update gesture recognition. Ignored.");
-        System.err.println(e);
-      }
-
-      // this triggeres the call of the callbackfunction in the main processing class.
-      for (Gesture gesture : gestures) {
-        if (gesture.check()) {
-          invokeCallback(gesture.getShortname());
-          block();
-        }
-      }
-    }
   }
 
   /**
@@ -198,60 +150,5 @@ public class GestureHandler {
    */
   public void addGesture(String gestureName) {
 
-    if (gestureName.equals(LeapGestures.SWIPE_LEFT)) {
-      gestures.add(new SwipeLeftGesture(leap));
-    } else if (gestureName.equals(LeapGestures.SWIPE_RIGHT)) {
-      gestures.add(new SwipeRightGesture(leap));
-    } else if (gestureName.equals(LeapGestures.SWIPE_UP)) {
-      gestures.add(new SwipeUpGesture(leap));
-    } else if (gestureName.equals(LeapGestures.SWIPE_DOWN)) {
-      gestures.add(new SwipeDownGesture(leap));
-    } else if (gestureName.equals(LeapGestures.PUSH)) {
-      gestures.add(new PushGesture(leap));
-    } else if (gestureName.equals(LeapGestures.PULL)) {
-      gestures.add(new PullGesture(leap));
-    } else if (gestureName.equals(LeapGestures.ON_HAND_ENTER)) {
-      gestures.add(new OnHandEnter(leap));
-    } else if (gestureName.equals(LeapGestures.ON_HAND_LEAVE)) {
-      gestures.add(new OnHandLeave(leap));
-    } else if (gestureName.equals(LeapGestures.ON_FINGER_ENTER)) {
-      gestures.add(new OnFingerEnter(leap));
-    } else if (gestureName.equals(LeapGestures.ON_FINGER_LEAVE)) {
-      gestures.add(new OnFingerLeave(leap));
-    }
-
-    if (gestureName.equals(LeapGestures.CIRCLE)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.TRIANGLE)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.RECTANGLE)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.X)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.CHECK)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.CHARET)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.ZIG_ZAG)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.ARROW)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.LEFT_SQUARE_BRACKET)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.RIGHT_SQUARE_BRACKET)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.V)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.DELETE)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.LEFT_CURLY_BRACKET)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.RIGHT_CURLY_BRACKET)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.STAR)) {
-      one.addGesture(gestureName);
-    } else if (gestureName.equals(LeapGestures.PIGTAIL)) {
-      one.addGesture(gestureName);
-    }
   }
 }

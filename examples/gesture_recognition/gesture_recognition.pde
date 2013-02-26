@@ -3,61 +3,140 @@ import com.onformative.leap.LeapGestures;
 import controlP5.*;
 
 LeapMotionP5 leap;
-ControlP5 cp5;
+  String lastGesture = "";
 
-int gestureCount = 0;
-String lastGesture = "";
+  public void setup() {
+    size(500, 500);
+    textSize(30);
+    frameRate(120);
 
-public void setup() {
-  size(500, 500);
-  textSize(30);
+    leap = new LeapMotionP5(this);
 
-  leap = new LeapMotionP5(this);
-  cp5 = new ControlP5(this);
+    //leap.enableGesture(Type.TYPE_CIRCLE);
+    //leap.enableGesture(Type.TYPE_SWIPE);
+    //leap.enableGesture(Type.TYPE_SCREEN_TAP);
+    //leap.enableGesture(Type.TYPE_KEY_TAP);
+  }
 
-  leap.addGesture(LeapGestures.SWIPE_LEFT);
-  leap.addGesture(LeapGestures.SWIPE_RIGHT);
-  leap.addGesture(LeapGestures.SWIPE_UP);
-  leap.addGesture(LeapGestures.SWIPE_DOWN);
-  //leap.addGesture(LeapGestures.ON_HAND_ENTER);
-  //leap.addGesture(LeapGestures.ON_HAND_LEAVE);
-  //leap.addGesture(LeapGestures.ON_FINGER_ENTER);
-  //leap.addGesture(LeapGestures.ON_FINGER_LEAVE);
-  //leap.addGesture(LeapGestures.PUSH);
-  //leap.addGesture(LeapGestures.PULL);
-  leap.addGesture(LeapGestures.CIRCLE);
-  leap.addGesture(LeapGestures.TRIANGLE);
-  leap.addGesture(LeapGestures.RECTANGLE);
-  //leap.addGesture(LeapGestures.ZIG_ZAG);
-  //leap.addGesture(LeapGestures.X);
-  //leap.addGesture(LeapGestures.CHECK);
-  //leap.addGesture(LeapGestures.CHARET);
-  //leap.addGesture(LeapGestures.ARROW);
-  //leap.addGesture(LeapGestures.LEFT_CURLY_BRACKET);
-  //leap.addGesture(LeapGestures.RIGHT_CURLY_BRACKET);
-  //leap.addGesture(LeapGestures.LEFT_SQUARE_BRACKET);
-  //leap.addGesture(LeapGestures.RIGHT_SQUARE_BRACKET);
-  //leap.addGesture(LeapGestures.V);
-  //leap.addGesture(LeapGestures.DELETE);
-  //leap.addGesture(LeapGestures.STAR);
-  //leap.addGesture(LeapGestures.PIGTAIL);
+  public void draw() {
+    background(0);
+    for (Hand hand : leap.getHandList()) {
+      PVector handPos = leap.getPosition(hand);
+      ellipse(handPos.x, handPos.y, 20, 20);
+    }
+    text(lastGesture, 30, 30);
+  }
 
-  leap.start();
-}
+  public void circleGestureRecognized(CircleGesture gesture, String clockwiseness) {
+    if (gesture.state() == State.STATE_STOP) {
+      System.out.println("//////////////////////////////////////");
+      System.out.println("Gesture type: " + gesture.type().toString());
+      System.out.println("ID: " + gesture.id());
+      System.out.println("Radius: " + gesture.radius());
+      System.out.println("Normal: "+gesture.normal());
+      System.out.println("Clockwiseness: " + clockwiseness);
+      System.out.println("Progress: " + gesture.progress());
+      System.out.println("Center: " + leap.convertVectorToPVector(gesture.center()));
+      System.out.println("Duration: " + gesture.durationSeconds() + "s");
+      System.out.println("//////////////////////////////////////");
+      lastGesture = "CIRCLE";
+    } else if (gesture.state() == State.STATE_START) {
 
-public void draw() {
-  background(0);
-  leap.gestures.one.draw();
-  leap.update();
-  text(lastGesture, 30, 30);
-}
+    } else if (gesture.state() == State.STATE_UPDATE) {
 
-public void gestureRecognized(String gesture) {
-  gestureCount++;
-  lastGesture = gesture+" "+gestureCount;
-}
+    }
+  }
 
-public void stop() {
-  leap.stop();
-}
+  public void swipeGestureRecognized(SwipeGesture gesture) {
+    if (gesture.state() == State.STATE_STOP) {
+      System.out.println("//////////////////////////////////////");
+      System.out.println("Gesture type: " + gesture.type());
+      System.out.println("ID: " + gesture.id());
+      System.out.println("Position: " + leap.convertVectorToPVector(gesture.position()));
+      System.out.println("Direction: " + gesture.direction());
+      System.out.println("Duration: " + gesture.durationSeconds() + "s");
+      System.out.println("Speed: " + gesture.speed());
+      System.out.println("//////////////////////////////////////");
+      lastGesture = "SWIPE";
+    } else if (gesture.state() == State.STATE_START) {
 
+    } else if (gesture.state() == State.STATE_UPDATE) {
+
+    }
+  }
+
+  public void screenTapGestureRecognized(ScreenTapGesture gesture) {
+    if (gesture.state() == State.STATE_STOP) {
+      System.out.println("//////////////////////////////////////");
+      System.out.println("Gesture type: " + gesture.type());
+      System.out.println("ID: " + gesture.id());
+      System.out.println("Position: " + leap.convertVectorToPVector(gesture.position()));
+      System.out.println("Direction: " + gesture.direction());
+      System.out.println("Duration: " + gesture.durationSeconds() + "s");
+      System.out.println("//////////////////////////////////////");
+      lastGesture = "SCREENTAP";
+    } else if (gesture.state() == State.STATE_START) {
+
+    } else if (gesture.state() == State.STATE_UPDATE) {
+
+    }
+  }
+
+  public void KeyTapGestureRecognized(KeyTapGesture gesture) {
+    if (gesture.state() == State.STATE_STOP) {
+      System.out.println("//////////////////////////////////////");
+      System.out.println("Gesture type: " + gesture.type());
+      System.out.println("ID: " + gesture.id());
+      System.out.println("Position: " + leap.convertVectorToPVector(gesture.position()));
+      System.out.println("Direction: " + gesture.direction());
+      System.out.println("Duration: " + gesture.durationSeconds() + "s");
+      System.out.println("//////////////////////////////////////");
+      lastGesture = "KEYTAP";
+    } else if (gesture.state() == State.STATE_START) {
+
+    } else if (gesture.state() == State.STATE_UPDATE) {
+
+    }
+  }
+
+  public void keyPressed() {
+    if (key == 'c') {
+      if (leap.isEnabled(Type.TYPE_CIRCLE)) {
+        leap.disableGesture(Type.TYPE_CIRCLE);
+      } else {
+        leap.enableGesture(Type.TYPE_CIRCLE);
+      }
+      System.out.println("Circle gesture: " + leap.isEnabled(Type.TYPE_CIRCLE));
+    }
+
+    if (key == 's') {
+      if (leap.isEnabled(Type.TYPE_SWIPE)) {
+        leap.disableGesture(Type.TYPE_SWIPE);
+      } else {
+        leap.enableGesture(Type.TYPE_SWIPE);
+      }
+      System.out.println("Swipe gesture: " + leap.isEnabled(Type.TYPE_SWIPE));
+    }
+
+    if (key == 'k') {
+      if (leap.isEnabled(Type.TYPE_KEY_TAP)) {
+        leap.disableGesture(Type.TYPE_KEY_TAP);
+      } else {
+        leap.enableGesture(Type.TYPE_KEY_TAP);
+      }
+      System.out.println("KeyTap gesture: " + leap.isEnabled(Type.TYPE_KEY_TAP));
+    }
+
+    if (key == 't') {
+      if (leap.isEnabled(Type.TYPE_SCREEN_TAP)) {
+        leap.disableGesture(Type.TYPE_SCREEN_TAP);
+      } else {
+        leap.enableGesture(Type.TYPE_SCREEN_TAP);
+      }
+      System.out.println("ScreenTap gesture: " + leap.isEnabled(Type.TYPE_SCREEN_TAP));
+    }
+  }
+  
+  public void stop(){
+    leap.stop();
+  }
