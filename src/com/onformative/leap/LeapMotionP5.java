@@ -45,7 +45,6 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Pointable;
 import com.leapmotion.leap.Tool;
 import com.leapmotion.leap.Vector;
-import com.onformative.leap.gestures.GestureHandler;
 
 /**
  * LeapMotionP5.java
@@ -74,7 +73,6 @@ public class LeapMotionP5 {
   private float LEAP_HEIGHT = 500.0f; // in mm
   private float LEAP_DEPTH = 200.0f; // in mm
 
-  public GestureHandler gestures;
 
   private Finger testFinger;
 
@@ -102,8 +100,6 @@ public class LeapMotionP5 {
     lastDetectedPointable.put(0, new Pointable());
     lastDetectedHand.put(0, new Hand());
     lastDetectedTool.put(0, new Tool());
-
-    gestures = new GestureHandler(p, this);
 
     // this is neccessary because the velocity of all objects has an offset.
     testFinger = new Finger();
