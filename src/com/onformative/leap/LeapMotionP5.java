@@ -107,10 +107,13 @@ public class LeapMotionP5 {
   }
 
   public String getSDKVersion() {
-    // return controller.
-    return "0.7.4";
+    return "0.7.5";
   }
 
+  /**
+   * this prints out the current offset of the vectors from the sdk. this is just for information
+   * and will give you the position, velocity and acceleration offsets
+   */
   public void printCorrectionOffset() {
     System.out.println("pos offset: " + getTip(testFinger));
     System.out.println("velo offset: " + getVelocity(testFinger));
