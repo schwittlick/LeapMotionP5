@@ -43,6 +43,7 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture.Type;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Pointable;
+import com.leapmotion.leap.ScreenList;
 import com.leapmotion.leap.Tool;
 import com.leapmotion.leap.Vector;
 
@@ -644,7 +645,28 @@ public class LeapMotionP5 {
         .getY(), pointable.tipPosition().getZ());
   }
 
+  /**
+   * to use this utility you have to have the leap calirated to your screen
+   * 
+   * @param pointable
+   * @param screenNr
+   * @return
+   */
+  public PVector getTipOnScreen(Pointable pointable, int screenNr) {
+    PVector pos;
 
+    ScreenList sl = controller.calibratedScreens();
+    com.leapmotion.leap.Screen calibratedScreen = sl.get(screenNr);
+    Vector loc = calibratedScreen.intersect(pointable, true);
+
+    float _x = PApplet.map(loc.getX(), 0, 1, 0, p.displayWidth);
+    _x -= p.getLocationOnScreen().x;
+    float _y = PApplet.map(loc.getY(), 0, 1, p.displayHeight, 0);
+    _y -= p.getLocationOnScreen().y;
+
+    pos = new PVector(_x, _y);
+    return pos;
+  }
 
   /**
    * returns the origin of the pointable. the origin is the place where the pointable leaves the

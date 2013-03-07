@@ -78,7 +78,7 @@ class LeapMotionListener extends Listener {
     callbackMethodNameCircle = "circleGestureRecognized";
     callbackMethodNameSwipe = "swipeGestureRecognized";
     callbackMethodNameScreenTap = "screenTapGestureRecognized";
-    callbackMethodNameKeyTap = "KeyTapGestureRecognized";
+    callbackMethodNameKeyTap = "keyTapGestureRecognized";
   }
 
   public void onInit(Controller controller) {
