@@ -648,8 +648,8 @@ public class LeapMotionP5 {
   /**
    * to use this utility you have to have the leap calirated to your screen
    * 
-   * @param pointable
-   * @param screenNr
+   * @param pointable the finger you want the intersection with your screen from
+   * @param screenNr the number of the screen you calibrated
    * @return
    */
   public PVector getTipOnScreen(Pointable pointable, int screenNr) {
