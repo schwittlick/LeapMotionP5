@@ -104,14 +104,17 @@ public class LeapMotionP5 {
 
     // this is neccessary because the velocity of all objects has an offset.
     testFinger = new Finger();
-    System.out.println("pos offset: " + getTip(testFinger));
-    System.out.println("velo offset: " + getVelocity(testFinger));
-    System.out.println("acc offset: " + getAcceleration(testFinger));
   }
 
   public String getSDKVersion() {
     // return controller.
     return "0.7.4";
+  }
+
+  public void printCorrectionOffset() {
+    System.out.println("pos offset: " + getTip(testFinger));
+    System.out.println("velo offset: " + getVelocity(testFinger));
+    System.out.println("acc offset: " + getAcceleration(testFinger));
   }
 
   /**
