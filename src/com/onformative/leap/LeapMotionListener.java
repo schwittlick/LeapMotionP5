@@ -37,6 +37,7 @@ import com.leapmotion.leap.CircleGesture;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
+import com.leapmotion.leap.Screen;
 import com.leapmotion.leap.Gesture.State;
 import com.leapmotion.leap.GestureList;
 import com.leapmotion.leap.KeyTapGesture;
@@ -74,6 +75,7 @@ class LeapMotionListener extends Listener {
     leap.lastFrames = new LinkedList<Frame>();
     leap.lastFramesInclProperTimestamps = new ConcurrentSkipListMap<Date, Frame>();
     leap.oldFrames = new CopyOnWriteArrayList<Frame>();
+    leap.oldControllers = new LinkedList<Controller>();
 
     callbackMethodNameCircle = "circleGestureRecognized";
     callbackMethodNameSwipe = "swipeGestureRecognized";
@@ -243,5 +245,10 @@ class LeapMotionListener extends Listener {
       leap.oldFrames.remove(0);
     }
     leap.oldFrames.add(frame);
+
+    if (leap.oldControllers.size() >= maxFrameCountToCheckForGestures) {
+      leap.oldControllers.removeLast();
+    }
+    leap.oldControllers.add(controller);
   }
 }
