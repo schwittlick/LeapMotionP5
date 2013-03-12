@@ -74,6 +74,7 @@ public class LeapMotionP5 {
   private float LEAP_HEIGHT = 500.0f; // in mm
   private float LEAP_DEPTH = 200.0f; // in mm
 
+  private int activeScreenNr = 0;
 
   private Finger testFinger;
 
@@ -652,17 +653,27 @@ public class LeapMotionP5 {
   }
 
   /**
+   * sets the current screen for gettings the calibrated points. I should rewrite this, but nobody
+   * is gonna read it anyway. arr.
+   * 
+   * @param screenNr
+   */
+  public void setActiveScreen(int screenNr) {
+    this.activeScreenNr = screenNr;
+  }
+
+  /**
    * to use this utility you have to have the leap calirated to your screen
    * 
    * @param pointable the finger you want the intersection with your screen from
    * @param screenNr the number of the screen you calibrated
    * @return
    */
-  public PVector getTipOnScreen(Pointable pointable, int screenNr) {
+  public PVector getTipOnScreen(Pointable pointable) {
     PVector pos;
 
     ScreenList sl = controller.calibratedScreens();
-    com.leapmotion.leap.Screen calibratedScreen = sl.get(screenNr);
+    com.leapmotion.leap.Screen calibratedScreen = sl.get(activeScreenNr);
     Vector loc = calibratedScreen.intersect(pointable, true);
 
     float _x = PApplet.map(loc.getX(), 0, 1, 0, p.displayWidth);
@@ -672,6 +683,29 @@ public class LeapMotionP5 {
 
     pos = new PVector(_x, _y);
     return pos;
+  }
+
+  private PVector lastPositionOnScreen = new PVector();
+
+  public PVector getVelocityOnScreen(Pointable pointable) {
+    PVector velocityOnScreen;
+
+    ScreenList sl = controller.calibratedScreens();
+    com.leapmotion.leap.Screen calibratedScreen = sl.get(activeScreenNr);
+    Vector loc = calibratedScreen.intersect(pointable, true);
+
+    float _x = PApplet.map(loc.getX(), 0, 1, 0, p.displayWidth);
+    _x -= p.getLocationOnScreen().x;
+    float _y = PApplet.map(loc.getY(), 0, 1, p.displayHeight, 0);
+    _y -= p.getLocationOnScreen().y;
+    
+    velocityOnScreen = new PVector(_x, _y);
+    velocityOnScreen.sub(lastPositionOnScreen);
+
+    lastPositionOnScreen = new PVector(_x, _y);
+
+
+    return velocityOnScreen;
   }
 
   /**
