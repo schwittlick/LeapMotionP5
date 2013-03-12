@@ -43,6 +43,7 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture.Type;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Pointable;
+import com.leapmotion.leap.Screen;
 import com.leapmotion.leap.ScreenList;
 import com.leapmotion.leap.Tool;
 import com.leapmotion.leap.Vector;
@@ -61,6 +62,7 @@ public class LeapMotionP5 {
 
   protected LinkedList<Frame> lastFrames;
   protected CopyOnWriteArrayList<Frame> oldFrames;
+  protected LinkedList<Controller> oldControllers;
   protected ConcurrentSkipListMap<Date, Frame> lastFramesInclProperTimestamps;
 
   protected Frame currentFrame;
@@ -229,6 +231,10 @@ public class LeapMotionP5 {
     return getFrames().get(getFrames().size() - 2);
   }
 
+  public Controller getLastController() {
+    return getLastControllers().get(getLastControllers().size() - 40);
+  }
+
   /**
    * returns the frame that was before the frame you passed.
    * 
@@ -261,6 +267,10 @@ public class LeapMotionP5 {
       System.err.println(e);
       return new CopyOnWriteArrayList<Frame>();
     }
+  }
+
+  public LinkedList<Controller> getLastControllers() {
+    return oldControllers;
   }
 
   /**
@@ -450,6 +460,22 @@ public class LeapMotionP5 {
       }
     }
     return returnHand;
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public float getScaleFactor() {
+    return getFrame().scaleFactor(getFrame());
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public PVector getTranslation() {
+    return convertVectorToPVector(getFrame().translation(getFrame()));
   }
 
   /**
@@ -685,27 +711,36 @@ public class LeapMotionP5 {
     return pos;
   }
 
-  private PVector lastPositionOnScreen = new PVector();
+  /**
+   * returns the velocity of a finger on the screen
+   * 
+   * @param pointable
+   * @return
+   */
 
   public PVector getVelocityOnScreen(Pointable pointable) {
-    PVector velocityOnScreen;
-
-    ScreenList sl = controller.calibratedScreens();
-    com.leapmotion.leap.Screen calibratedScreen = sl.get(activeScreenNr);
-    Vector loc = calibratedScreen.intersect(pointable, true);
+    Vector loc = new Vector();
+    Vector oldLoc = new Vector();
+    try {
+      oldLoc =
+          getLastController().calibratedScreens().get(activeScreenNr)
+              .intersect(getPointableById(pointable.id(), getLastFrame()), true);
+      loc = controller.calibratedScreens().get(activeScreenNr).intersect(pointable, true);
+    } catch (NullPointerException e) {
+      // dirty dirty hack to keep the programm runing. i like it.
+    }
 
     float _x = PApplet.map(loc.getX(), 0, 1, 0, p.displayWidth);
     _x -= p.getLocationOnScreen().x;
     float _y = PApplet.map(loc.getY(), 0, 1, p.displayHeight, 0);
     _y -= p.getLocationOnScreen().y;
-    
-    velocityOnScreen = new PVector(_x, _y);
-    velocityOnScreen.sub(lastPositionOnScreen);
 
-    lastPositionOnScreen = new PVector(_x, _y);
+    float _x2 = PApplet.map(oldLoc.getX(), 0, 1, 0, p.displayWidth);
+    _x2 -= p.getLocationOnScreen().x;
+    float _y2 = PApplet.map(oldLoc.getY(), 0, 1, p.displayHeight, 0);
+    _y2 -= p.getLocationOnScreen().y;
 
-
-    return velocityOnScreen;
+    return new PVector(_x - _x2, _y - _y2);
   }
 
   /**
