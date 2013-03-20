@@ -43,7 +43,6 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture.Type;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Pointable;
-import com.leapmotion.leap.Screen;
 import com.leapmotion.leap.ScreenList;
 import com.leapmotion.leap.Tool;
 import com.leapmotion.leap.Vector;
@@ -52,33 +51,33 @@ import com.leapmotion.leap.Vector;
  * LeapMotionP5.java
  * 
  * @author Marcel Schwittlick
- * @modified 19.02.2013
+ * @modified 15.03.2013
  * 
  */
 public class LeapMotionP5 {
   private PApplet p;
   private LeapMotionListener listener;
   private Controller controller;
+  private String sdkVersion = "0.7.5";
+  
+  private final float LEAP_WIDTH = 200.0f; // in mm
+  private final float LEAP_HEIGHT = 500.0f; // in mm
+  private final float LEAP_DEPTH = 200.0f; // in mm
 
+  protected Frame currentFrame;
   protected LinkedList<Frame> lastFrames;
   protected CopyOnWriteArrayList<Frame> oldFrames;
   protected LinkedList<Controller> oldControllers;
   protected ConcurrentSkipListMap<Date, Frame> lastFramesInclProperTimestamps;
 
-  protected Frame currentFrame;
-
   protected HashMap<Integer, Finger> lastDetectedFinger;
   protected HashMap<Integer, Pointable> lastDetectedPointable;
   protected HashMap<Integer, Hand> lastDetectedHand;
-  protected HashMap<Integer, Tool> lastDetectedTool;
-
-  private float LEAP_WIDTH = 200.0f; // in mm
-  private float LEAP_HEIGHT = 500.0f; // in mm
-  private float LEAP_DEPTH = 200.0f; // in mm
+  protected HashMap<Integer, Tool> lastDetectedTool;  
 
   private int activeScreenNr = 0;
 
-  private Finger testFinger;
+  private Finger velocityOffsetTestFinger;
 
   /**
    * this class gives you some high level access to the data tracked and recorded by the leap. it
@@ -106,11 +105,15 @@ public class LeapMotionP5 {
     lastDetectedTool.put(0, new Tool());
 
     // this is neccessary because the velocity of all objects has an offset.
-    testFinger = new Finger();
+    velocityOffsetTestFinger = new Finger();
   }
 
+  /**
+   * 
+   * @return
+   */
   public String getSDKVersion() {
-    return "0.7.5";
+    return sdkVersion;
   }
 
   /**
@@ -118,9 +121,9 @@ public class LeapMotionP5 {
    * and will give you the position, velocity and acceleration offsets
    */
   public void printCorrectionOffset() {
-    System.out.println("pos offset: " + getTip(testFinger));
-    System.out.println("velo offset: " + getVelocity(testFinger));
-    System.out.println("acc offset: " + getAcceleration(testFinger));
+    System.out.println("pos offset: " + getTip(velocityOffsetTestFinger));
+    System.out.println("velo offset: " + getVelocity(velocityOffsetTestFinger));
+    System.out.println("acc offset: " + getAcceleration(velocityOffsetTestFinger));
   }
 
   /**
@@ -128,6 +131,7 @@ public class LeapMotionP5 {
    */
   public void stop() {
     controller.removeListener(listener);
+    p.stop();
   }
 
   /**
@@ -139,7 +143,7 @@ public class LeapMotionP5 {
    * @return PVector containing the velocity offset
    */
   public PVector velocityOffset() {
-    return convertVectorToPVector(testFinger.tipVelocity());
+    return convertVectorToPVector(velocityOffsetTestFinger.tipVelocity());
   }
 
   /**
@@ -149,7 +153,7 @@ public class LeapMotionP5 {
    * @return PVector containing the acceleration offset
    */
   public PVector accelerationOffset() {
-    return getAcceleration(testFinger);
+    return getAcceleration(velocityOffsetTestFinger);
   }
 
   public void enableGesture(Type gestureName) {
@@ -467,15 +471,38 @@ public class LeapMotionP5 {
    * @return
    */
   public float getScaleFactor() {
-    return getFrame().scaleFactor(getFrame());
+    return getFrame().scaleFactor(getLastFrame());
   }
 
   /**
    * 
    * @return
    */
+  public float getScaleFactor(Frame frame) {
+    return getFrame().scaleFactor(frame);
+  }
+
+  /**
+   * returns averaged translation of all points tracked by the leap in comparison to the last frame
+   * 
+   * @return
+   */
   public PVector getTranslation() {
-    return convertVectorToPVector(getFrame().translation(getFrame()));
+    PVector translation = convertVectorToPVector(getFrame().translation(getLastFrame()));
+    translation.sub(velocityOffset());
+    return translation;
+  }
+
+  /**
+   * returns averaged translation of all points tracked by the leap in comparison to the frame you
+   * passed in the method
+   * 
+   * @return
+   */
+  public PVector getTranslation(Frame frame) {
+    PVector translation = convertVectorToPVector(getFrame().translation(frame));
+    translation.sub(velocityOffset());
+    return translation;
   }
 
   /**

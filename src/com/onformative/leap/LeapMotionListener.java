@@ -29,20 +29,16 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import jogamp.graph.font.typecast.TypecastGlyph;
-
 import processing.core.PApplet;
 
 import com.leapmotion.leap.CircleGesture;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
-import com.leapmotion.leap.Screen;
 import com.leapmotion.leap.Gesture.State;
 import com.leapmotion.leap.GestureList;
 import com.leapmotion.leap.KeyTapGesture;
 import com.leapmotion.leap.Listener;
-import com.leapmotion.leap.Gesture.Type;
 import com.leapmotion.leap.ScreenTapGesture;
 import com.leapmotion.leap.SwipeGesture;
 
