@@ -59,7 +59,7 @@ public class LeapMotionP5 {
   private LeapMotionListener listener;
   private Controller controller;
   private String sdkVersion = "0.7.5";
-  
+
   private final float LEAP_WIDTH = 200.0f; // in mm
   private final float LEAP_HEIGHT = 500.0f; // in mm
   private final float LEAP_DEPTH = 200.0f; // in mm
@@ -73,7 +73,7 @@ public class LeapMotionP5 {
   protected HashMap<Integer, Finger> lastDetectedFinger;
   protected HashMap<Integer, Pointable> lastDetectedPointable;
   protected HashMap<Integer, Hand> lastDetectedHand;
-  protected HashMap<Integer, Tool> lastDetectedTool;  
+  protected HashMap<Integer, Tool> lastDetectedTool;
 
   private int activeScreenNr = 0;
 
@@ -143,7 +143,7 @@ public class LeapMotionP5 {
    * @return PVector containing the velocity offset
    */
   public PVector velocityOffset() {
-    return convertVectorToPVector(velocityOffsetTestFinger.tipVelocity());
+    return vectorToPVector(velocityOffsetTestFinger.tipVelocity());
   }
 
   /**
@@ -367,7 +367,7 @@ public class LeapMotionP5 {
    * @param vector from the leap sdk containing a position in the leap space
    * @return the vector in PVector data type containing the same position in processing window space
    */
-  public PVector convertVectorToPVector(Vector vector) {
+  public PVector vectorToPVector(Vector vector) {
     return convertLeapToScreenDimension(vector.getX(), vector.getY(), vector.getZ());
   }
 
@@ -488,7 +488,7 @@ public class LeapMotionP5 {
    * @return
    */
   public PVector getTranslation() {
-    PVector translation = convertVectorToPVector(getFrame().translation(getLastFrame()));
+    PVector translation = vectorToPVector(getFrame().translation(getLastFrame()));
     translation.sub(velocityOffset());
     return translation;
   }
@@ -500,7 +500,7 @@ public class LeapMotionP5 {
    * @return
    */
   public PVector getTranslation(Frame frame) {
-    PVector translation = convertVectorToPVector(getFrame().translation(frame));
+    PVector translation = vectorToPVector(getFrame().translation(frame));
     translation.sub(velocityOffset());
     return translation;
   }
@@ -546,7 +546,7 @@ public class LeapMotionP5 {
    * @return PVector direction of the hand
    */
   public PVector getDirection(Hand hand) {
-    return convertVectorToPVector(hand.direction());
+    return vectorToPVector(hand.direction());
   }
 
   /**
@@ -556,7 +556,7 @@ public class LeapMotionP5 {
    * @return PVector position of the hand
    */
   public PVector getPosition(Hand hand) {
-    return convertVectorToPVector(hand.palmPosition());
+    return vectorToPVector(hand.palmPosition());
   }
 
   /**
@@ -566,7 +566,7 @@ public class LeapMotionP5 {
    * @return a PVector containing the normal of thepalm of the hand
    */
   public PVector getNormal(Hand hand) {
-    return convertVectorToPVector(hand.palmNormal());
+    return vectorToPVector(hand.palmNormal());
   }
 
   /**
@@ -576,7 +576,7 @@ public class LeapMotionP5 {
    * @return a PVector containing the velocity of the hand
    */
   public PVector getVelocity(Hand hand) {
-    PVector velo = convertVectorToPVector(hand.palmVelocity());
+    PVector velo = vectorToPVector(hand.palmVelocity());
     velo.sub(velocityOffset());
     return velo;
   }
@@ -605,6 +605,24 @@ public class LeapMotionP5 {
     acceleration = currentVelo;
 
     return acceleration;
+  }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public PVector getSphereCenter(Hand hand) {
+    return vectorToPVector(hand.sphereCenter());
+  }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public float getSphereRadius(Hand hand) {
+    return hand.sphereRadius();
   }
 
   /**
@@ -790,7 +808,7 @@ public class LeapMotionP5 {
         new Vector(pointable.tipPosition().getX() - direction.x, pointable.tipPosition().getY()
             - direction.y, pointable.tipPosition().getZ() - direction.z);
 
-    return convertVectorToPVector(anklePos);
+    return vectorToPVector(anklePos);
   }
 
   /**
@@ -800,7 +818,7 @@ public class LeapMotionP5 {
    * @return a PVector containing the velocity of the tip of the pointble
    */
   public PVector getVelocity(Pointable pointable) {
-    PVector velo = convertVectorToPVector(pointable.tipVelocity());
+    PVector velo = vectorToPVector(pointable.tipVelocity());
     velo.sub(velocityOffset());
     return velo;
   }
@@ -814,7 +832,7 @@ public class LeapMotionP5 {
    * @return a PVector containing the direction of the pointable
    */
   public PVector getDirection(Pointable pointable) {
-    return convertVectorToPVector(pointable.direction());
+    return vectorToPVector(pointable.direction());
   }
 
   /**
