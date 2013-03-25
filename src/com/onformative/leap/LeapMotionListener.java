@@ -53,12 +53,11 @@ import com.leapmotion.leap.SwipeGesture;
 class LeapMotionListener extends Listener {
   private LeapMotionP5 leap;
 
-  private int maxFrameCountToCheckForGestures = 1000;
-  String callbackMethodNameCircle;
-  String callbackMethodNameSwipe;
-  String callbackMethodNameScreenTap;
-  String callbackMethodNameKeyTap;
-
+  protected int maxFramesToRecord = 1000;
+  private String callbackMethodNameCircle;
+  private String callbackMethodNameSwipe;
+  private String callbackMethodNameScreenTap;
+  private String callbackMethodNameKeyTap;
 
   /**
    * 
@@ -73,10 +72,10 @@ class LeapMotionListener extends Listener {
     leap.oldFrames = new CopyOnWriteArrayList<Frame>();
     leap.oldControllers = new LinkedList<Controller>();
 
-    callbackMethodNameCircle = "circleGestureRecognized";
-    callbackMethodNameSwipe = "swipeGestureRecognized";
-    callbackMethodNameScreenTap = "screenTapGestureRecognized";
-    callbackMethodNameKeyTap = "keyTapGestureRecognized";
+    this.callbackMethodNameCircle = "circleGestureRecognized";
+    this.callbackMethodNameSwipe = "swipeGestureRecognized";
+    this.callbackMethodNameScreenTap = "screenTapGestureRecognized";
+    this.callbackMethodNameKeyTap = "keyTapGestureRecognized";
   }
 
   public void onInit(Controller controller) {
@@ -85,8 +84,6 @@ class LeapMotionListener extends Listener {
 
   public void onConnect(Controller controller) {
     System.out.println("Leap Motion Connected");
-    // controller.enableGesture(Type.TYPE_CIRCLE);
-    // controller.enableGesture(Type.TYPE_SWIPE);
   }
 
   public void onDisconnect(Controller controller) {
@@ -225,24 +222,24 @@ class LeapMotionListener extends Listener {
     processGestures(controller);
 
     // adding frames the list. making sure that only the newest frames are saved in order
-    if (leap.lastFrames.size() >= maxFrameCountToCheckForGestures) {
+    if (leap.lastFrames.size() >= maxFramesToRecord) {
       leap.lastFrames.removeFirst();
     }
     leap.lastFrames.add(frame);
 
     // adding frames to the list. adding a proper timestamp to each frame object
-    if (leap.lastFramesInclProperTimestamps.size() >= maxFrameCountToCheckForGestures) {
+    if (leap.lastFramesInclProperTimestamps.size() >= maxFramesToRecord) {
       leap.lastFramesInclProperTimestamps.remove(leap.lastFramesInclProperTimestamps.firstKey());
     }
     leap.lastFramesInclProperTimestamps.put(new Date(), frame);
 
     // adding old frames to different object
-    if (leap.oldFrames.size() >= maxFrameCountToCheckForGestures) {
+    if (leap.oldFrames.size() >= maxFramesToRecord) {
       leap.oldFrames.remove(0);
     }
     leap.oldFrames.add(frame);
 
-    if (leap.oldControllers.size() >= maxFrameCountToCheckForGestures) {
+    if (leap.oldControllers.size() >= maxFramesToRecord) {
       leap.oldControllers.removeLast();
     }
     leap.oldControllers.add(controller);

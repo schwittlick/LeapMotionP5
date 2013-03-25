@@ -117,6 +117,14 @@ public class LeapMotionP5 {
   }
 
   /**
+   * 
+   * @param max
+   */
+  public void maxFramesToRecord(int max) {
+    listener.maxFramesToRecord = max;
+  }
+
+  /**
    * this prints out the current offset of the vectors from the sdk. this is just for information
    * and will give you the position, velocity and acceleration offsets
    */
