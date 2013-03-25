@@ -5,12 +5,7 @@ LeapMotionP5
 Working with <b>all Processing versions</b> and <b>all operating systems (OSX, Windows)</b>, with the newest version of the leap motion sdk. Moreover it is including a variety of <b>gestures</b>.
 Just download the library archive at the bottom of this readme and extract it into the libraries folder of your processing sketchbook and your're ready to go.
 
-API
---------
-
-#### List of all available methods:
-
-check http://www.onformative.com/lab/leapmotionp5
+Check http://www.onformative.com/lab/leapmotionp5 for additional information about the library.
 
 Download
 --------
