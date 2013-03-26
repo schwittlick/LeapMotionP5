@@ -36,7 +36,7 @@ public void circleGestureRecognized(CircleGesture gesture, String clockwiseness)
     System.out.println("Normal: " + gesture.normal());
     System.out.println("Clockwiseness: " + clockwiseness);
     System.out.println("Turns: " + gesture.progress());
-    System.out.println("Center: " + leap.convertVectorToPVector(gesture.center()));
+    System.out.println("Center: " + leap.vectorToPVector(gesture.center()));
     System.out.println("Duration: " + gesture.durationSeconds() + "s");
     System.out.println("//////////////////////////////////////");
     lastGesture = "Gesture type: " + gesture.type().toString() + "\n";
@@ -45,7 +45,7 @@ public void circleGestureRecognized(CircleGesture gesture, String clockwiseness)
     lastGesture += "Normal: " + gesture.normal() + "\n";
     lastGesture += "Clockwiseness: " + clockwiseness + "\n";
     lastGesture += "Turns: " + gesture.progress() + "\n";
-    lastGesture += "Center: " + leap.convertVectorToPVector(gesture.center()) + "\n";
+    lastGesture += "Center: " + leap.vectorToPVector(gesture.center()) + "\n";
     lastGesture += "Duration: " + gesture.durationSeconds() + "s" + "\n";
   } 
   else if (gesture.state() == State.STATE_START) {
@@ -59,14 +59,14 @@ public void swipeGestureRecognized(SwipeGesture gesture) {
     System.out.println("//////////////////////////////////////");
     System.out.println("Gesture type: " + gesture.type());
     System.out.println("ID: " + gesture.id());
-    System.out.println("Position: " + leap.convertVectorToPVector(gesture.position()));
+    System.out.println("Position: " + leap.vectorToPVector(gesture.position()));
     System.out.println("Direction: " + gesture.direction());
     System.out.println("Duration: " + gesture.durationSeconds() + "s");
     System.out.println("Speed: " + gesture.speed());
     System.out.println("//////////////////////////////////////");
     lastGesture = "Gesture type: " + gesture.type().toString() + "\n";
     lastGesture += "ID: " + gesture.id() + "\n";
-    lastGesture += "Position: " + leap.convertVectorToPVector(gesture.position()) + "\n";
+    lastGesture += "Position: " + leap.vectorToPVector(gesture.position()) + "\n";
     lastGesture += "Direction: " + gesture.direction() + "\n";
     lastGesture += "Speed: " + gesture.speed() + "\n";
     lastGesture += "Duration: " + gesture.durationSeconds() + "s" + "\n";
@@ -82,13 +82,13 @@ public void screenTapGestureRecognized(ScreenTapGesture gesture) {
     System.out.println("//////////////////////////////////////");
     System.out.println("Gesture type: " + gesture.type());
     System.out.println("ID: " + gesture.id());
-    System.out.println("Position: " + leap.convertVectorToPVector(gesture.position()));
+    System.out.println("Position: " + leap.vectorToPVector(gesture.position()));
     System.out.println("Direction: " + gesture.direction());
     System.out.println("Duration: " + gesture.durationSeconds() + "s");
     System.out.println("//////////////////////////////////////");
     lastGesture = "Gesture type: " + gesture.type().toString() + "\n";
     lastGesture += "ID: " + gesture.id() + "\n";
-    lastGesture += "Position: " + leap.convertVectorToPVector(gesture.position()) + "\n";
+    lastGesture += "Position: " + leap.vectorToPVector(gesture.position()) + "\n";
     lastGesture += "Direction: " + gesture.direction() + "\n";
     lastGesture += "Duration: " + gesture.durationSeconds() + "s" + "\n";
   } 
@@ -103,13 +103,13 @@ public void KeyTapGestureRecognized(KeyTapGesture gesture) {
     System.out.println("//////////////////////////////////////");
     System.out.println("Gesture type: " + gesture.type());
     System.out.println("ID: " + gesture.id());
-    System.out.println("Position: " + leap.convertVectorToPVector(gesture.position()));
+    System.out.println("Position: " + leap.vectorToPVector(gesture.position()));
     System.out.println("Direction: " + gesture.direction());
     System.out.println("Duration: " + gesture.durationSeconds() + "s");
     System.out.println("//////////////////////////////////////");
     lastGesture = "Gesture type: " + gesture.type().toString() + "\n";
     lastGesture += "ID: " + gesture.id() + "\n";
-    lastGesture += "Position: " + leap.convertVectorToPVector(gesture.position()) + "\n";
+    lastGesture += "Position: " + leap.vectorToPVector(gesture.position()) + "\n";
     lastGesture += "Direction: " + gesture.direction() + "\n";
     lastGesture += "Duration: " + gesture.durationSeconds() + "s" + "\n";
   } 

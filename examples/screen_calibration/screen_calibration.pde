@@ -20,7 +20,7 @@ public void setup() {
 public void draw() {
   background(0);
   for (Finger f : leap.getFingerList()) {
-    PVector screenPos = leap.getTipOnScreen(f, 0);
+    PVector screenPos = leap.getTipOnScreen(f);
     ellipse(screenPos.x, screenPos.y, 10, 10);
   }
 }
