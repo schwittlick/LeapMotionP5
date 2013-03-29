@@ -37,6 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import com.leapmotion.leap.Config;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
@@ -58,7 +59,7 @@ public class LeapMotionP5 {
   private PApplet p;
   private LeapMotionListener listener;
   private Controller controller;
-  private String sdkVersion = "0.7.5";
+  private String sdkVersion = "0.7.6";
 
   private final float LEAP_WIDTH = 200.0f; // in mm
   private final float LEAP_HEIGHT = 500.0f; // in mm
@@ -152,6 +153,10 @@ public class LeapMotionP5 {
    */
   public PVector velocityOffset() {
     return vectorToPVector(velocityOffsetTestFinger.tipVelocity());
+  }
+
+  public PVector positionOffset() {
+    return vectorToPVector(velocityOffsetTestFinger.tipPosition());
   }
 
   /**
@@ -554,7 +559,10 @@ public class LeapMotionP5 {
    * @return PVector direction of the hand
    */
   public PVector getDirection(Hand hand) {
-    return vectorToPVector(hand.direction());
+
+    PVector dir = vectorToPVector(hand.direction());
+    dir.sub(positionOffset());
+    return dir;
   }
 
   /**
@@ -574,7 +582,9 @@ public class LeapMotionP5 {
    * @return a PVector containing the normal of thepalm of the hand
    */
   public PVector getNormal(Hand hand) {
-    return vectorToPVector(hand.palmNormal());
+    PVector normal = vectorToPVector(hand.palmNormal());
+    normal.sub(positionOffset());
+    return normal;
   }
 
   /**
