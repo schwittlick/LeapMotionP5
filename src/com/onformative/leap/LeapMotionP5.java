@@ -37,45 +37,48 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import com.leapmotion.leap.Config;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Gesture.Type;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Pointable;
+import com.leapmotion.leap.ScreenList;
 import com.leapmotion.leap.Tool;
 import com.leapmotion.leap.Vector;
-import com.onformative.leap.gestures.GestureHandler;
 
 /**
  * LeapMotionP5.java
  * 
  * @author Marcel Schwittlick
- * @modified 19.02.2013
+ * @modified 15.03.2013
  * 
  */
 public class LeapMotionP5 {
   private PApplet p;
   private LeapMotionListener listener;
   private Controller controller;
+  private String sdkVersion = "0.7.6";
 
-  protected LinkedList<Frame> lastFrames;
-  protected CopyOnWriteArrayList<Frame> oldFrames;
-  protected ConcurrentSkipListMap<Date, Frame> lastFramesInclProperTimestamps;
+  private final float LEAP_WIDTH = 200.0f; // in mm
+  private final float LEAP_HEIGHT = 500.0f; // in mm
+  private final float LEAP_DEPTH = 200.0f; // in mm
 
   protected Frame currentFrame;
+  protected LinkedList<Frame> lastFrames;
+  protected CopyOnWriteArrayList<Frame> oldFrames;
+  protected LinkedList<Controller> oldControllers;
+  protected ConcurrentSkipListMap<Date, Frame> lastFramesInclProperTimestamps;
 
   protected HashMap<Integer, Finger> lastDetectedFinger;
   protected HashMap<Integer, Pointable> lastDetectedPointable;
   protected HashMap<Integer, Hand> lastDetectedHand;
   protected HashMap<Integer, Tool> lastDetectedTool;
 
-  private float LEAP_WIDTH = 200.0f; // in mm
-  private float LEAP_HEIGHT = 500.0f; // in mm
-  private float LEAP_DEPTH = 200.0f; // in mm
+  private int activeScreenNr = 0;
 
-  public GestureHandler gestures;
-
-  private Finger testFinger;
+  private Finger velocityOffsetTestFinger;
 
   /**
    * this class gives you some high level access to the data tracked and recorded by the leap. it
@@ -102,33 +105,42 @@ public class LeapMotionP5 {
     lastDetectedHand.put(0, new Hand());
     lastDetectedTool.put(0, new Tool());
 
-    gestures = new GestureHandler(p, this);
-
     // this is neccessary because the velocity of all objects has an offset.
-    testFinger = new Finger();
-    System.out.println("pos offset: " + getTip(testFinger));
-    System.out.println("velo offset: " + getVelocity(testFinger));
-    System.out.println("acc offset: " + getAcceleration(testFinger));
+    velocityOffsetTestFinger = new Finger();
   }
 
   /**
    * 
+   * @return
    */
-  public void start() {
-    gestures.start();
+  public String getSDKVersion() {
+    return sdkVersion;
+  }
+
+  /**
+   * 
+   * @param max
+   */
+  public void maxFramesToRecord(int max) {
+    listener.maxFramesToRecord = max;
+  }
+
+  /**
+   * this prints out the current offset of the vectors from the sdk. this is just for information
+   * and will give you the position, velocity and acceleration offsets
+   */
+  public void printCorrectionOffset() {
+    System.out.println("pos offset: " + getTip(velocityOffsetTestFinger));
+    System.out.println("velo offset: " + getVelocity(velocityOffsetTestFinger));
+    System.out.println("acc offset: " + getAcceleration(velocityOffsetTestFinger));
   }
 
   /**
    * 
    */
   public void stop() {
-    try {
-      gestures.stop();
-    } catch (Exception e) {
-      System.err.println("Gestures not initialized. Can not stop gesture recognition.");
-    }
-
     controller.removeListener(listener);
+    p.stop();
   }
 
   /**
@@ -140,7 +152,11 @@ public class LeapMotionP5 {
    * @return PVector containing the velocity offset
    */
   public PVector velocityOffset() {
-    return convertVectorToPVector(testFinger.tipVelocity());
+    return vectorToPVector(velocityOffsetTestFinger.tipVelocity());
+  }
+
+  public PVector positionOffset() {
+    return vectorToPVector(velocityOffsetTestFinger.tipPosition());
   }
 
   /**
@@ -150,25 +166,19 @@ public class LeapMotionP5 {
    * @return PVector containing the acceleration offset
    */
   public PVector accelerationOffset() {
-    return getAcceleration(testFinger);
+    return getAcceleration(velocityOffsetTestFinger);
   }
 
-  /**
-   * this allows you to add a new gesture to the gesture recognition. only gestures that have been
-   * added in that way are going to be recognized. this is helpful if you only want to include
-   * certain gestures and want to ignore certain ones. adding only the gestures you want is
-   * important because certain gestures are recognized easier than other ones or are part of other
-   * gestures.
-   * 
-   * @param gestureName the String of the gesture name. they are included in the LeapGestures class.
-   */
-  public void addGesture(String gestureName) {
-    try {
-      gestures.addGesture(gestureName);
-    } catch (Exception e) {
-      System.err.println("Can not add gestures.");
-      System.err.println(e);
-    }
+  public void enableGesture(Type gestureName) {
+    controller.enableGesture(gestureName);
+  }
+
+  public void disableGesture(Type gesture) {
+    controller.enableGesture(gesture, false);
+  }
+
+  public boolean isEnabled(Type gesture) {
+    return controller.isGestureEnabled(gesture);
   }
 
   /**
@@ -177,13 +187,7 @@ public class LeapMotionP5 {
    * @return PApplet parent
    */
   public PApplet getParent() {
-    try {
-      return p;
-    } catch (Exception e) {
-      System.err.println("Can not return parent PApplet. Returning new PApplet object instead");
-      System.out.println(e);
-      return new PApplet();
-    }
+    return p;
   }
 
   /**
@@ -199,18 +203,6 @@ public class LeapMotionP5 {
           .println("Can not return controller not initialized. Returning new Controller object");
       System.out.println(e);
       return new Controller();
-    }
-  }
-
-  /**
-   * this method only has to be called if you want to detect gestures
-   */
-  public void update() {
-    try {
-      gestures.update();
-    } catch (Exception e) {
-      System.err.println("Can not update gesture recognition.");
-      System.err.println(e);
     }
   }
 
@@ -256,6 +248,10 @@ public class LeapMotionP5 {
     return getFrames().get(getFrames().size() - 2);
   }
 
+  public Controller getLastController() {
+    return getLastControllers().get(getLastControllers().size() - 40);
+  }
+
   /**
    * returns the frame that was before the frame you passed.
    * 
@@ -288,6 +284,10 @@ public class LeapMotionP5 {
       System.err.println(e);
       return new CopyOnWriteArrayList<Frame>();
     }
+  }
+
+  public LinkedList<Controller> getLastControllers() {
+    return oldControllers;
   }
 
   /**
@@ -380,7 +380,7 @@ public class LeapMotionP5 {
    * @param vector from the leap sdk containing a position in the leap space
    * @return the vector in PVector data type containing the same position in processing window space
    */
-  public PVector convertVectorToPVector(Vector vector) {
+  public PVector vectorToPVector(Vector vector) {
     return convertLeapToScreenDimension(vector.getX(), vector.getY(), vector.getZ());
   }
 
@@ -480,6 +480,45 @@ public class LeapMotionP5 {
   }
 
   /**
+   * 
+   * @return
+   */
+  public float getScaleFactor() {
+    return getFrame().scaleFactor(getLastFrame());
+  }
+
+  /**
+   * 
+   * @return
+   */
+  public float getScaleFactor(Frame frame) {
+    return getFrame().scaleFactor(frame);
+  }
+
+  /**
+   * returns averaged translation of all points tracked by the leap in comparison to the last frame
+   * 
+   * @return
+   */
+  public PVector getTranslation() {
+    PVector translation = vectorToPVector(getFrame().translation(getLastFrame()));
+    translation.sub(velocityOffset());
+    return translation;
+  }
+
+  /**
+   * returns averaged translation of all points tracked by the leap in comparison to the frame you
+   * passed in the method
+   * 
+   * @return
+   */
+  public PVector getTranslation(Frame frame) {
+    PVector translation = vectorToPVector(getFrame().translation(frame));
+    translation.sub(velocityOffset());
+    return translation;
+  }
+
+  /**
    * returns the pitch of the hand you passed
    * 
    * @param hand the hand you want the pitch of
@@ -520,7 +559,10 @@ public class LeapMotionP5 {
    * @return PVector direction of the hand
    */
   public PVector getDirection(Hand hand) {
-    return convertVectorToPVector(hand.direction());
+
+    PVector dir = vectorToPVector(hand.direction());
+    dir.sub(positionOffset());
+    return dir;
   }
 
   /**
@@ -530,7 +572,7 @@ public class LeapMotionP5 {
    * @return PVector position of the hand
    */
   public PVector getPosition(Hand hand) {
-    return convertVectorToPVector(hand.palmPosition());
+    return vectorToPVector(hand.palmPosition());
   }
 
   /**
@@ -540,7 +582,9 @@ public class LeapMotionP5 {
    * @return a PVector containing the normal of thepalm of the hand
    */
   public PVector getNormal(Hand hand) {
-    return convertVectorToPVector(hand.palmNormal());
+    PVector normal = vectorToPVector(hand.palmNormal());
+    normal.sub(positionOffset());
+    return normal;
   }
 
   /**
@@ -550,7 +594,7 @@ public class LeapMotionP5 {
    * @return a PVector containing the velocity of the hand
    */
   public PVector getVelocity(Hand hand) {
-    PVector velo = convertVectorToPVector(hand.palmVelocity());
+    PVector velo = vectorToPVector(hand.palmVelocity());
     velo.sub(velocityOffset());
     return velo;
   }
@@ -579,6 +623,24 @@ public class LeapMotionP5 {
     acceleration = currentVelo;
 
     return acceleration;
+  }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public PVector getSphereCenter(Hand hand) {
+    return vectorToPVector(hand.sphereCenter());
+  }
+
+  /**
+   * 
+   * @param hand
+   * @return
+   */
+  public float getSphereRadius(Hand hand) {
+    return hand.sphereRadius();
   }
 
   /**
@@ -653,6 +715,22 @@ public class LeapMotionP5 {
   }
 
   /**
+   * 
+   * @param id
+   * @param frame
+   * @return
+   */
+  public Finger getFingerById(int id, Frame frame) {
+    Finger returnFinger = null;
+    for (Finger finger : getFingerList(frame)) {
+      if (finger.id() == id) {
+        returnFinger = finger;
+      }
+    }
+    return returnFinger;
+  }
+
+  /**
    * returns the tip position of the passed pointable
    * 
    * @param pointable the pointable you want the tippoisition of
@@ -663,7 +741,70 @@ public class LeapMotionP5 {
         .getY(), pointable.tipPosition().getZ());
   }
 
+  /**
+   * sets the current screen for gettings the calibrated points. I should rewrite this, but nobody
+   * is gonna read it anyway. arr.
+   * 
+   * @param screenNr
+   */
+  public void setActiveScreen(int screenNr) {
+    this.activeScreenNr = screenNr;
+  }
 
+  /**
+   * to use this utility you have to have the leap calirated to your screen
+   * 
+   * @param pointable the finger you want the intersection with your screen from
+   * @param screenNr the number of the screen you calibrated
+   * @return
+   */
+  public PVector getTipOnScreen(Pointable pointable) {
+    PVector pos;
+
+    ScreenList sl = controller.calibratedScreens();
+    com.leapmotion.leap.Screen calibratedScreen = sl.get(activeScreenNr);
+    Vector loc = calibratedScreen.intersect(pointable, true);
+
+    float _x = PApplet.map(loc.getX(), 0, 1, 0, p.displayWidth);
+    _x -= p.getLocationOnScreen().x;
+    float _y = PApplet.map(loc.getY(), 0, 1, p.displayHeight, 0);
+    _y -= p.getLocationOnScreen().y;
+
+    pos = new PVector(_x, _y);
+    return pos;
+  }
+
+  /**
+   * returns the velocity of a finger on the screen
+   * 
+   * @param pointable
+   * @return
+   */
+
+  public PVector getVelocityOnScreen(Pointable pointable) {
+    Vector loc = new Vector();
+    Vector oldLoc = new Vector();
+    try {
+      oldLoc =
+          getLastController().calibratedScreens().get(activeScreenNr)
+              .intersect(getPointableById(pointable.id(), getLastFrame()), true);
+      loc = controller.calibratedScreens().get(activeScreenNr).intersect(pointable, true);
+    } catch (NullPointerException e) {
+      // dirty dirty hack to keep the programm runing. i like it.
+    }
+
+    float _x = PApplet.map(loc.getX(), 0, 1, 0, p.displayWidth);
+    _x -= p.getLocationOnScreen().x;
+    float _y = PApplet.map(loc.getY(), 0, 1, p.displayHeight, 0);
+    _y -= p.getLocationOnScreen().y;
+
+    float _x2 = PApplet.map(oldLoc.getX(), 0, 1, 0, p.displayWidth);
+    _x2 -= p.getLocationOnScreen().x;
+    float _y2 = PApplet.map(oldLoc.getY(), 0, 1, p.displayHeight, 0);
+    _y2 -= p.getLocationOnScreen().y;
+
+    return new PVector(_x - _x2, _y - _y2);
+  }
 
   /**
    * returns the origin of the pointable. the origin is the place where the pointable leaves the
@@ -685,7 +826,7 @@ public class LeapMotionP5 {
         new Vector(pointable.tipPosition().getX() - direction.x, pointable.tipPosition().getY()
             - direction.y, pointable.tipPosition().getZ() - direction.z);
 
-    return convertVectorToPVector(anklePos);
+    return vectorToPVector(anklePos);
   }
 
   /**
@@ -695,7 +836,7 @@ public class LeapMotionP5 {
    * @return a PVector containing the velocity of the tip of the pointble
    */
   public PVector getVelocity(Pointable pointable) {
-    PVector velo = convertVectorToPVector(pointable.tipVelocity());
+    PVector velo = vectorToPVector(pointable.tipVelocity());
     velo.sub(velocityOffset());
     return velo;
   }
@@ -709,7 +850,7 @@ public class LeapMotionP5 {
    * @return a PVector containing the direction of the pointable
    */
   public PVector getDirection(Pointable pointable) {
-    return convertVectorToPVector(pointable.direction());
+    return vectorToPVector(pointable.direction());
   }
 
   /**

@@ -29,9 +29,18 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import processing.core.PApplet;
+
+import com.leapmotion.leap.CircleGesture;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Gesture;
+import com.leapmotion.leap.Gesture.State;
+import com.leapmotion.leap.GestureList;
+import com.leapmotion.leap.KeyTapGesture;
 import com.leapmotion.leap.Listener;
+import com.leapmotion.leap.ScreenTapGesture;
+import com.leapmotion.leap.SwipeGesture;
 
 /**
  * LeapMotionListener.java
@@ -44,7 +53,11 @@ import com.leapmotion.leap.Listener;
 class LeapMotionListener extends Listener {
   private LeapMotionP5 leap;
 
-  private int maxFrameCountToCheckForGestures = 1000;
+  protected int maxFramesToRecord = 1000;
+  private String callbackMethodNameCircle;
+  private String callbackMethodNameSwipe;
+  private String callbackMethodNameScreenTap;
+  private String callbackMethodNameKeyTap;
 
   /**
    * 
@@ -57,6 +70,12 @@ class LeapMotionListener extends Listener {
     leap.lastFrames = new LinkedList<Frame>();
     leap.lastFramesInclProperTimestamps = new ConcurrentSkipListMap<Date, Frame>();
     leap.oldFrames = new CopyOnWriteArrayList<Frame>();
+    leap.oldControllers = new LinkedList<Controller>();
+
+    this.callbackMethodNameCircle = "circleGestureRecognized";
+    this.callbackMethodNameSwipe = "swipeGestureRecognized";
+    this.callbackMethodNameScreenTap = "screenTapGestureRecognized";
+    this.callbackMethodNameKeyTap = "keyTapGestureRecognized";
   }
 
   public void onInit(Controller controller) {
@@ -75,6 +94,122 @@ class LeapMotionListener extends Listener {
     System.out.println("Leap Motion Exited");
   }
 
+  private void invokeCallback(Gesture gesture) {
+    PApplet parent = leap.getParent();
+
+    if (parent != null) {
+      switch (gesture.type()) {
+        case TYPE_CIRCLE:
+          CircleGesture circleGesture = new CircleGesture(gesture);
+          String clockwiseness;
+          if (circleGesture.pointable().direction().angleTo(circleGesture.normal()) <= Math.PI / 4) {
+            // Clockwise if angle is less than 90 degrees
+            clockwiseness = "clockwise";
+          } else {
+            clockwiseness = "counterclockwise";
+          }
+          try {
+            parent.getClass()
+                .getMethod(this.callbackMethodNameCircle, CircleGesture.class, String.class)
+                .invoke(parent, circleGesture, clockwiseness);
+          } catch (Exception e) {
+            PApplet.println(e.getMessage() + " CALLBACK ERROR");
+          }
+          break;
+        case TYPE_SWIPE:
+          SwipeGesture swipeGesture = new SwipeGesture(gesture);
+          try {
+            parent.getClass().getMethod(this.callbackMethodNameSwipe, SwipeGesture.class)
+                .invoke(parent, swipeGesture);
+          } catch (Exception e) {
+            PApplet.println(e.getMessage() + " CALLBACK ERROR");
+          }
+          break;
+        case TYPE_SCREEN_TAP:
+          ScreenTapGesture screenTapGesture = new ScreenTapGesture(gesture);
+          try {
+            parent.getClass().getMethod(this.callbackMethodNameScreenTap, ScreenTapGesture.class)
+                .invoke(parent, screenTapGesture);
+          } catch (Exception e) {
+            PApplet.println(e.getMessage() + " CALLBACK ERROR");
+          }
+          break;
+        case TYPE_KEY_TAP:
+          KeyTapGesture keyTapGesture = new KeyTapGesture(gesture);
+          try {
+            parent.getClass().getMethod(this.callbackMethodNameKeyTap, KeyTapGesture.class)
+                .invoke(parent, keyTapGesture);
+          } catch (Exception e) {
+            PApplet.println(e.getMessage() + " CALLBACK ERROR");
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
+
+  }
+
+  private void printGestureDetails(Gesture gesture, Controller controller) {
+    switch (gesture.type()) {
+      case TYPE_CIRCLE:
+        CircleGesture circle = new CircleGesture(gesture);
+
+        // Calculate clock direction using the angle between circle normal and pointable
+        String clockwiseness;
+        if (circle.pointable().direction().angleTo(circle.normal()) <= Math.PI / 4) {
+          // Clockwise if angle is less than 90 degrees
+          clockwiseness = "clockwise";
+        } else {
+          clockwiseness = "counterclockwise";
+        }
+
+        // Calculate angle swept since last frame
+        double sweptAngle = 0;
+        if (circle.state() != State.STATE_START) {
+          CircleGesture previousUpdate =
+              new CircleGesture(controller.frame(1).gesture(circle.id()));
+          sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * Math.PI;
+        }
+
+        System.out.println("Circle id: " + circle.id() + ", " + circle.state() + ", progress: "
+            + circle.progress() + ", radius: " + circle.radius() + ", angle: "
+            + Math.toDegrees(sweptAngle) + ", " + clockwiseness);
+        break;
+      case TYPE_SWIPE:
+        SwipeGesture swipe = new SwipeGesture(gesture);
+        System.out.println("Swipe id: " + swipe.id() + ", " + swipe.state() + ", position: "
+            + swipe.position() + ", direction: " + swipe.direction() + ", speed: " + swipe.speed());
+        break;
+      case TYPE_SCREEN_TAP:
+        ScreenTapGesture screenTap = new ScreenTapGesture(gesture);
+        System.out.println("Screen Tap id: " + screenTap.id() + ", " + screenTap.state()
+            + ", position: " + screenTap.position() + ", direction: " + screenTap.direction());
+        break;
+      case TYPE_KEY_TAP:
+        KeyTapGesture keyTap = new KeyTapGesture(gesture);
+        System.out.println("Key Tap id: " + keyTap.id() + ", " + keyTap.state() + ", position: "
+            + keyTap.position() + ", direction: " + keyTap.direction());
+        break;
+      default:
+        System.out.println("Unknown gesture type.");
+        break;
+    }
+
+  }
+
+  private void processGestures(Controller controller) {
+    GestureList list = controller.frame().gestures();
+    if (list.empty() == false) {
+      for (int i = 0; i < list.count(); i++) {
+        Gesture gesture = list.get(i);
+        invokeCallback(gesture);
+        // printGestureDetails(gesture, controller);
+      }
+    }
+  }
+
   /**
    * this is called about 100-120 times a second delevering a new frame with information from the
    * leap tracking everything in its viewport. This is where most of the data which is accessible in
@@ -84,22 +219,29 @@ class LeapMotionListener extends Listener {
     Frame frame = controller.frame();
     leap.currentFrame = frame;
 
+    processGestures(controller);
+
     // adding frames the list. making sure that only the newest frames are saved in order
-    if (leap.lastFrames.size() >= maxFrameCountToCheckForGestures) {
+    if (leap.lastFrames.size() >= maxFramesToRecord) {
       leap.lastFrames.removeFirst();
     }
     leap.lastFrames.add(frame);
 
     // adding frames to the list. adding a proper timestamp to each frame object
-    if (leap.lastFramesInclProperTimestamps.size() >= maxFrameCountToCheckForGestures) {
+    if (leap.lastFramesInclProperTimestamps.size() >= maxFramesToRecord) {
       leap.lastFramesInclProperTimestamps.remove(leap.lastFramesInclProperTimestamps.firstKey());
     }
     leap.lastFramesInclProperTimestamps.put(new Date(), frame);
 
     // adding old frames to different object
-    if (leap.oldFrames.size() >= maxFrameCountToCheckForGestures) {
+    if (leap.oldFrames.size() >= maxFramesToRecord) {
       leap.oldFrames.remove(0);
     }
     leap.oldFrames.add(frame);
+
+    if (leap.oldControllers.size() >= maxFramesToRecord) {
+      leap.oldControllers.removeLast();
+    }
+    leap.oldControllers.add(controller);
   }
 }
