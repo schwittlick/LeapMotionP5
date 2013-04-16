@@ -66,11 +66,11 @@ class LeapMotionListener extends Listener {
    */
   public LeapMotionListener(LeapMotionP5 leap) {
     this.leap = leap;
-    leap.currentFrame = new Frame();
-    leap.lastFrames = new LinkedList<Frame>();
-    leap.lastFramesInclProperTimestamps = new ConcurrentSkipListMap<Date, Frame>();
-    leap.oldFrames = new CopyOnWriteArrayList<Frame>();
-    leap.oldControllers = new LinkedList<Controller>();
+    this.leap.currentFrame = new Frame();
+    this.leap.lastFrames = new LinkedList<Frame>();
+    this.leap.lastFramesInclProperTimestamps = new ConcurrentSkipListMap<Date, Frame>();
+    this.leap.oldFrames = new CopyOnWriteArrayList<Frame>();
+    this.leap.oldControllers = new LinkedList<Controller>();
 
     this.callbackMethodNameCircle = "circleGestureRecognized";
     this.callbackMethodNameSwipe = "swipeGestureRecognized";
@@ -95,7 +95,7 @@ class LeapMotionListener extends Listener {
   }
 
   private void invokeCallback(Gesture gesture) {
-    PApplet parent = leap.getParent();
+    PApplet parent = this.leap.getParent();
 
     if (parent != null) {
       switch (gesture.type()) {
@@ -217,7 +217,7 @@ class LeapMotionListener extends Listener {
    */
   public void onFrame(Controller controller) {
     Frame frame = controller.frame();
-    leap.currentFrame = frame;
+    this.leap.currentFrame = frame;
 
     processGestures(controller);
 
