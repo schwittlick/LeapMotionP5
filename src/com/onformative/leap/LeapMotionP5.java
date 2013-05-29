@@ -59,7 +59,7 @@ public class LeapMotionP5 {
   private PApplet p;
   private LeapMotionListener listener;
   private Controller controller;
-  private String sdkVersion = "0.7.6";
+  private String sdkVersion = "0.7.7";
 
   private final float LEAP_WIDTH = 200.0f; // in mm
   private final float LEAP_HEIGHT = 500.0f; // in mm
@@ -90,23 +90,23 @@ public class LeapMotionP5 {
   public LeapMotionP5(PApplet p) {
     this.p = p;
 
-    listener = new LeapMotionListener(this);
-    controller = new Controller();
+    this.listener = new LeapMotionListener(this);
+    this.controller = new Controller();
 
-    controller.addListener(listener);
+    this.controller.addListener(listener);
 
-    lastDetectedFinger = new HashMap<Integer, Finger>();
-    lastDetectedPointable = new HashMap<Integer, Pointable>();
-    lastDetectedHand = new HashMap<Integer, Hand>();
-    lastDetectedTool = new HashMap<Integer, Tool>();
+    this.lastDetectedFinger = new HashMap<Integer, Finger>();
+    this.lastDetectedPointable = new HashMap<Integer, Pointable>();
+    this.lastDetectedHand = new HashMap<Integer, Hand>();
+    this.lastDetectedTool = new HashMap<Integer, Tool>();
 
-    lastDetectedFinger.put(0, new Finger());
-    lastDetectedPointable.put(0, new Pointable());
-    lastDetectedHand.put(0, new Hand());
-    lastDetectedTool.put(0, new Tool());
+    this.lastDetectedFinger.put(0, new Finger());
+    this.lastDetectedPointable.put(0, new Pointable());
+    this.lastDetectedHand.put(0, new Hand());
+    this.lastDetectedTool.put(0, new Tool());
 
     // this is neccessary because the velocity of all objects has an offset.
-    velocityOffsetTestFinger = new Finger();
+    this.velocityOffsetTestFinger = new Finger();
   }
 
   /**
@@ -114,7 +114,7 @@ public class LeapMotionP5 {
    * @return
    */
   public String getSDKVersion() {
-    return sdkVersion;
+    return this.sdkVersion;
   }
 
   /**
@@ -122,7 +122,7 @@ public class LeapMotionP5 {
    * @param max
    */
   public void maxFramesToRecord(int max) {
-    listener.maxFramesToRecord = max;
+    this.listener.maxFramesToRecord = max;
   }
 
   /**
@@ -130,17 +130,17 @@ public class LeapMotionP5 {
    * and will give you the position, velocity and acceleration offsets
    */
   public void printCorrectionOffset() {
-    System.out.println("pos offset: " + getTip(velocityOffsetTestFinger));
-    System.out.println("velo offset: " + getVelocity(velocityOffsetTestFinger));
-    System.out.println("acc offset: " + getAcceleration(velocityOffsetTestFinger));
+    System.out.println("pos offset: " + getTip(this.velocityOffsetTestFinger));
+    System.out.println("velo offset: " + getVelocity(this.velocityOffsetTestFinger));
+    System.out.println("acc offset: " + getAcceleration(this.velocityOffsetTestFinger));
   }
 
   /**
    * 
    */
   public void stop() {
-    controller.removeListener(listener);
-    p.stop();
+    this.controller.removeListener(this.listener);
+    this.p.stop();
   }
 
   /**
@@ -152,11 +152,11 @@ public class LeapMotionP5 {
    * @return PVector containing the velocity offset
    */
   public PVector velocityOffset() {
-    return vectorToPVector(velocityOffsetTestFinger.tipVelocity());
+    return vectorToPVector(this.velocityOffsetTestFinger.tipVelocity());
   }
 
   public PVector positionOffset() {
-    return vectorToPVector(velocityOffsetTestFinger.tipPosition());
+    return vectorToPVector(this.velocityOffsetTestFinger.tipPosition());
   }
 
   /**
@@ -166,19 +166,19 @@ public class LeapMotionP5 {
    * @return PVector containing the acceleration offset
    */
   public PVector accelerationOffset() {
-    return getAcceleration(velocityOffsetTestFinger);
+    return getAcceleration(this.velocityOffsetTestFinger);
   }
 
   public void enableGesture(Type gestureName) {
-    controller.enableGesture(gestureName);
+    this.controller.enableGesture(gestureName);
   }
 
   public void disableGesture(Type gesture) {
-    controller.enableGesture(gesture, false);
+    this.controller.enableGesture(gesture, false);
   }
 
   public boolean isEnabled(Type gesture) {
-    return controller.isGestureEnabled(gesture);
+    return this.controller.isGestureEnabled(gesture);
   }
 
   /**
@@ -187,7 +187,7 @@ public class LeapMotionP5 {
    * @return PApplet parent
    */
   public PApplet getParent() {
-    return p;
+    return this.p;
   }
 
   /**
@@ -197,7 +197,7 @@ public class LeapMotionP5 {
    */
   public Controller getController() {
     try {
-      return controller;
+      return this.controller;
     } catch (Exception e) {
       System.err
           .println("Can not return controller not initialized. Returning new Controller object");
@@ -214,7 +214,7 @@ public class LeapMotionP5 {
    */
   public Frame getFrame() {
     try {
-      return currentFrame;
+      return this.currentFrame;
     } catch (Exception e) {
       System.err.println("Can not return current frame. Returning new Frame object instead");
       System.err.println(e);
@@ -278,7 +278,7 @@ public class LeapMotionP5 {
    */
   public CopyOnWriteArrayList<Frame> getFrames() {
     try {
-      return oldFrames;
+      return this.oldFrames;
     } catch (Exception e) {
       System.err.println("Can not return list of last frames. Returning empty list instead.");
       System.err.println(e);
@@ -287,7 +287,7 @@ public class LeapMotionP5 {
   }
 
   public LinkedList<Controller> getLastControllers() {
-    return oldControllers;
+    return this.oldControllers;
   }
 
   /**
@@ -315,9 +315,9 @@ public class LeapMotionP5 {
     PVector fingerPositionXYPlane = new PVector();
 
     Frame frame = getFrame();
-    if (frame.hands().empty() == false) {
+    if (frame.hands().isEmpty() == false) {
       Hand hand = frame.hands().get(0);
-      if (hand.fingers().empty() == false) {
+      if (hand.fingers().isEmpty() == false) {
         Finger finger = hand.fingers().get(0);
         fingerPositionXYPlane.x = transformLeapToScreenX(finger.tipPosition().getX());
         fingerPositionXYPlane.y = transformLeapToScreenY(finger.tipPosition().getY());
@@ -338,9 +338,9 @@ public class LeapMotionP5 {
      * int startX = -243; int endX = 256; float valueMapped = PApplet.map(x, startX, endX, 0,
      * p.width); return valueMapped;
      */
-    float c = p.width / 2.0f;
+    float c = this.p.width / 2.0f;
     if (x > 0.0) {
-      return PApplet.lerp(c, p.width, x / LEAP_WIDTH);
+      return PApplet.lerp(c, this.p.width, x / LEAP_WIDTH);
     } else {
       return PApplet.lerp(c, 0.0f, -x / LEAP_WIDTH);
     }
@@ -357,7 +357,7 @@ public class LeapMotionP5 {
      * int startY = 50; int endY = 350; float valueMapped = PApplet.map(y, startY, endY, 0,
      * p.height); return valueMapped;
      */
-    return PApplet.lerp(p.height, 0.0f, y / LEAP_HEIGHT);
+    return PApplet.lerp(this.p.height, 0.0f, y / LEAP_HEIGHT);
   }
 
   /**
@@ -371,7 +371,7 @@ public class LeapMotionP5 {
      * int startZ = -51; int endZ = 149; float valueMapped = PApplet.map(z, startZ, endZ, 0,
      * p.width); return valueMapped;
      */
-    return PApplet.lerp(0, p.width, z / LEAP_DEPTH);
+    return PApplet.lerp(0, this.p.width, z / LEAP_DEPTH);
   }
 
   /**
@@ -409,7 +409,7 @@ public class LeapMotionP5 {
   public ArrayList<Hand> getHandList() {
     ArrayList<Hand> hands = new ArrayList<Hand>();
     Frame frame = getFrame();
-    if (frame.hands().empty() == false) {
+    if (frame.hands().isEmpty() == false) {
       for (Hand hand : frame.hands()) {
         hands.add(hand);
       }
@@ -426,7 +426,7 @@ public class LeapMotionP5 {
   public ArrayList<Hand> getHandList(Frame frame) {
     ArrayList<Hand> hands = new ArrayList<Hand>();
     try {
-      if (frame.hands().empty() == false) {
+      if (frame.hands().isEmpty() == false) {
         for (Hand hand : frame.hands()) {
           if (hand.isValid()) {
             hands.add(hand);
@@ -451,12 +451,12 @@ public class LeapMotionP5 {
   public Hand getHand(int handNr) {
     Hand returnHand = null;
     if (!getHandList().isEmpty()) {
-      lastDetectedHand.put(handNr, getHandList().get(handNr));
+      this.lastDetectedHand.put(handNr, getHandList().get(handNr));
     }
     // returnHand = lastDetectedHand.get(handNr);
     int downCounter = 0;
     while (returnHand == null) {
-      returnHand = lastDetectedHand.get(handNr - downCounter);
+      returnHand = this.lastDetectedHand.get(handNr - downCounter);
       downCounter++;
     }
     return returnHand;
@@ -652,7 +652,7 @@ public class LeapMotionP5 {
     ArrayList<Finger> fingers = new ArrayList<Finger>();
 
     Frame frame = getFrame();
-    if (frame.hands().empty() == false) {
+    if (frame.hands().isEmpty() == false) {
       for (Hand hand : frame.hands()) {
         fingers.addAll(getFingerList(hand));
       }
@@ -670,7 +670,7 @@ public class LeapMotionP5 {
   public ArrayList<Finger> getFingerList(Frame frame) {
     ArrayList<Finger> fingers = new ArrayList<Finger>();
 
-    if (frame.hands().empty() == false) {
+    if (frame.hands().isEmpty() == false) {
       for (Hand hand : frame.hands()) {
         fingers.addAll(getFingerList(hand));
       }
@@ -703,12 +703,12 @@ public class LeapMotionP5 {
   public Finger getFinger(int fingerNr) {
     Finger returnFinger = null;
     if (getFingerList().size() > fingerNr) {
-      lastDetectedFinger.put(fingerNr, getFingerList().get(fingerNr));
+      this.lastDetectedFinger.put(fingerNr, getFingerList().get(fingerNr));
     }
     // returnFinger = lastDetectedFinger.get(fingerNr);
     int downCounter = 0;
     while (returnFinger == null) {
-      returnFinger = lastDetectedFinger.get(fingerNr - downCounter);
+      returnFinger = this.lastDetectedFinger.get(fingerNr - downCounter);
       downCounter++;
     }
     return returnFinger;
@@ -761,13 +761,13 @@ public class LeapMotionP5 {
   public PVector getTipOnScreen(Pointable pointable) {
     PVector pos;
 
-    ScreenList sl = controller.calibratedScreens();
+    ScreenList sl = this.controller.locatedScreens();
     com.leapmotion.leap.Screen calibratedScreen = sl.get(activeScreenNr);
     Vector loc = calibratedScreen.intersect(pointable, true);
 
-    float _x = PApplet.map(loc.getX(), 0, 1, 0, p.displayWidth);
+    float _x = PApplet.map(loc.getX(), 0, 1, 0, this.p.displayWidth);
     _x -= p.getLocationOnScreen().x;
-    float _y = PApplet.map(loc.getY(), 0, 1, p.displayHeight, 0);
+    float _y = PApplet.map(loc.getY(), 0, 1, this.p.displayHeight, 0);
     _y -= p.getLocationOnScreen().y;
 
     pos = new PVector(_x, _y);
@@ -786,22 +786,22 @@ public class LeapMotionP5 {
     Vector oldLoc = new Vector();
     try {
       oldLoc =
-          getLastController().calibratedScreens().get(activeScreenNr)
+          getLastController().locatedScreens().get(this.activeScreenNr)
               .intersect(getPointableById(pointable.id(), getLastFrame()), true);
-      loc = controller.calibratedScreens().get(activeScreenNr).intersect(pointable, true);
+      loc = this.controller.locatedScreens().get(this.activeScreenNr).intersect(pointable, true);
     } catch (NullPointerException e) {
       // dirty dirty hack to keep the programm runing. i like it.
     }
 
-    float _x = PApplet.map(loc.getX(), 0, 1, 0, p.displayWidth);
-    _x -= p.getLocationOnScreen().x;
-    float _y = PApplet.map(loc.getY(), 0, 1, p.displayHeight, 0);
-    _y -= p.getLocationOnScreen().y;
+    float _x = PApplet.map(loc.getX(), 0, 1, 0, this.p.displayWidth);
+    _x -= this.p.getLocationOnScreen().x;
+    float _y = PApplet.map(loc.getY(), 0, 1, this.p.displayHeight, 0);
+    _y -= this.p.getLocationOnScreen().y;
 
-    float _x2 = PApplet.map(oldLoc.getX(), 0, 1, 0, p.displayWidth);
-    _x2 -= p.getLocationOnScreen().x;
-    float _y2 = PApplet.map(oldLoc.getY(), 0, 1, p.displayHeight, 0);
-    _y2 -= p.getLocationOnScreen().y;
+    float _x2 = PApplet.map(oldLoc.getX(), 0, 1, 0, this.p.displayWidth);
+    _x2 -= this.p.getLocationOnScreen().x;
+    float _y2 = PApplet.map(oldLoc.getY(), 0, 1, this.p.displayHeight, 0);
+    _y2 -= this.p.getLocationOnScreen().y;
 
     return new PVector(_x - _x2, _y - _y2);
   }
@@ -910,7 +910,7 @@ public class LeapMotionP5 {
     ArrayList<Pointable> pointables = new ArrayList<Pointable>();
 
     Frame frame = getFrame();
-    if (frame.hands().empty() == false) {
+    if (frame.hands().isEmpty() == false) {
       for (Hand hand : frame.hands()) {
         pointables.addAll(getPointableList(hand));
       }
@@ -927,7 +927,7 @@ public class LeapMotionP5 {
   public ArrayList<Pointable> getPointableList(Frame frame) {
     ArrayList<Pointable> pointables = new ArrayList<Pointable>();
 
-    if (frame.hands().empty() == false) {
+    if (frame.hands().isEmpty() == false) {
       for (Hand hand : frame.hands()) {
         pointables.addAll(getPointableList(hand));
       }
@@ -962,12 +962,12 @@ public class LeapMotionP5 {
   public Pointable getPointable(int pointableNr) {
     Pointable returnPointable = null;
     if (!getPointableList().isEmpty()) {
-      lastDetectedPointable.put(pointableNr, getPointableList().get(pointableNr));
+      this.lastDetectedPointable.put(pointableNr, getPointableList().get(pointableNr));
     }
     // returnPointable = lastDetectedPointable.get(pointableNr);
     int downCounter = 0;
     while (returnPointable == null) {
-      returnPointable = lastDetectedPointable.get(pointableNr - downCounter);
+      returnPointable = this.lastDetectedPointable.get(pointableNr - downCounter);
       downCounter++;
     }
     return returnPointable;
@@ -999,7 +999,7 @@ public class LeapMotionP5 {
     ArrayList<Tool> tools = new ArrayList<Tool>();
 
     Frame frame = getFrame();
-    if (frame.hands().empty() == false) {
+    if (frame.hands().isEmpty() == false) {
       for (Hand hand : frame.hands()) {
         tools.addAll(getToolList(hand));
       }
@@ -1016,7 +1016,7 @@ public class LeapMotionP5 {
   public ArrayList<Tool> getToolList(Frame frame) {
     ArrayList<Tool> tools = new ArrayList<Tool>();
 
-    if (frame.hands().empty() == false) {
+    if (frame.hands().isEmpty() == false) {
       for (Hand hand : frame.hands()) {
         tools.addAll(getToolList(hand));
       }
@@ -1050,12 +1050,12 @@ public class LeapMotionP5 {
   public Tool getTool(int toolNr) {
     Tool returnTool = null;
     if (!getToolList().isEmpty()) {
-      lastDetectedTool.put(toolNr, getToolList().get(toolNr));
+      this.lastDetectedTool.put(toolNr, getToolList().get(toolNr));
     }
     // returnTool = lastDetectedTool.get(toolNr);
     int downCounter = 0;
     while (returnTool == null) {
-      returnTool = lastDetectedTool.get(toolNr - downCounter);
+      returnTool = this.lastDetectedTool.get(toolNr - downCounter);
       downCounter++;
     }
     return returnTool;
@@ -1069,7 +1069,7 @@ public class LeapMotionP5 {
    */
   public Date getTimestamp(Frame frame) {
     Date date = null;
-    Set<Entry<Date, Frame>> lastFramesInclDates = lastFramesInclProperTimestamps.entrySet();
+    Set<Entry<Date, Frame>> lastFramesInclDates = this.lastFramesInclProperTimestamps.entrySet();
     Iterator<Entry<Date, Frame>> i = lastFramesInclDates.iterator();
     while (i.hasNext()) {
       Entry<Date, Frame> entry = i.next();
