@@ -59,7 +59,7 @@ public class LeapMotionP5 {
   private PApplet p;
   private LeapMotionListener listener;
   private Controller controller;
-  private String sdkVersion = "0.7.7";
+  private String sdkVersion = "0.8.1";
 
   private final float LEAP_WIDTH = 200.0f; // in mm
   private final float LEAP_HEIGHT = 500.0f; // in mm
